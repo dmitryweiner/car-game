@@ -1,0 +1,66 @@
+<html>
+<head>
+    <style>
+        #car {
+            position: relative;
+            top: 250px;
+            left: 250px;
+            height: 30px;
+            width: 30px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMODBEsFfQKVgAABARJREFUSMetl8uLHFUUh79zb1V3dff0PDK+ZjSJAYnBTZSIRkQjBEOWZiWIf4NLd9m6CS5duBQ3EjQrSRAEsxAUAsaNqCAKSSbGPJhHpqe7uqrOL4vqGSYiTmv3LQpuFafOx3n86lQZ/2F9Ao0u1swsJjkEAQ3khaqyB/m7MBzXl41jJLDzafravlJvBwsvJ3DwRvrIvMs4UN5ZL+CaVF3JA+cfq6pvXgLfy2ccB7w013yzeOXoF0s3119f8LjcDUm7FTthnhAepWhnFpdCmhxbOfH8meuD3tUv7w9+mxj8MTQ6C/Pv71vvv7q41iezSCQyo4KuCgwjbKdlMGhi5m9tbF28ANW/+U32Aj8Tkmzm9sYLgR7tkBKJJBYJBEC4GSbIEAs315hXeawfkhZe5hOBm1iCheVokYzIKsY1VWxQ4YgOxn6DxxXpB1HIn4z4nn73NAhmQVgnI/CphnyrintyenV2yYBFM45bwjuWUGBZxGxicErAMT7wnCuqEAbYjhz6wA05nyvnupW8Z4mPI5Uwho0XWHlLGkEf1qDt2q1I9CGPmE8MrsLc4a1dEdoO3B7ab69NS8KapYcmBq/D8Bb8kJkhoAByYIAzwMlH9xxombEi/3GVqjlxjQ+p9/P3+P0OgTngxZBx2DIWQ/3oPS/5QwN+0pAu8Luq9ZPEq1Normh/qWyeCk0+Cl2alpJYg0jEgDJUlCooNeQr3+SS9zMjTt7VZliOkiGQIwQ0AbO6SqUqckSO2EBsoagxZkAy5hTRGr7TRma7WssMVF/10Vg+xzJykED5P8jn72GVdbdanAY4AVUwcNWTwAFJyHw0BQSjEmiU4zANsCGEKtt2PjpcPsrI9n0nWG0wFXCoAykTYzQWhOOUVBjgOKKOPtZn2Z0GuFGXuJjBaqxqsI3mgMtx1Vlo1eD+bNipw/8Hl67QxdodICICwnBcEDEMJyASnCbQgcRdk8tpA28cwI7MA59VfRatYM4SAoGWGQM5d1WwooLDBkcIzxaoAfQmAm/h9pRZugic9R4JgWT0uWNmuESByHE+jG1mzfYN8DhxxFvInsZCezQIhoghqlU8qu326iK60N2gipOPRVwJqsIuObFLVtt7B6p6Z0P2rvGeYJcwqXQ583UGKEcgB8r6/cwCRkOOo2Eq+cSpzvFhw+wa+HPnYsYVdy5TsTLSyzKRN4gcD4GWKkr8NqicGHzKfevrYBfm8dMAp0PK6ZjyHU1WSTkZ7tMuoeclsyq4K11aMzan8idxIqS/zElzDVgqEmtvHUlM+1ueLbd89lBelqtlL+bVSi6/9Gews2fcV6fy71S/wlK7XNnRZhKfGB5ME82gBCnfNG9eL/rF0O+cM//1YllU47h7AHIV/Q20HDH4AAAAAElFTkSuQmCC');
+        }
+        #playField {
+            background-color: #adadad;
+        }
+    </style>
+</head>
+<body>
+<script>
+
+    var x = 250;
+    var y = 250;
+    var vx = 0;
+    var vy = 0;
+    var dt = 1;
+
+    function go_top() {
+        vx = 0;
+        vy = -1;
+    }
+
+    function go_left() {
+        vx = -1;
+        vy = 0;
+    }
+
+    function go_right() {
+        vx = 1;
+        vy = 0;
+    }
+
+    function go_down() {
+        vx = 0;
+        vy = 1;
+    }
+
+    function run() {
+        var car = document.getElementById('car');
+        x = x + vx * dt;
+        y = y + vy * dt;
+        car.style="left: " + x + "px; top: " + y + "px";
+
+    }
+
+    window.setInterval(run, 100);
+
+</script>
+<div id="playField" style="width: 500px; height:500px;">
+    <div id="car"></div>
+</div>
+
+<button onclick="go_top();" width="60">top</button><br />
+<button onclick="go_left();" width="30">left</button>
+<button onclick="go_right();" width="30">right</button><br />
+<button onclick="go_down();" width="60">down</button>
+</body>
+<html>
