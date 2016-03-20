@@ -18,97 +18,115 @@
 <body>
 <script>
 
-    var max_x = null;
-    var max_y = null;
-    var x = null;
-    var y = null;
-    var vx = 0;
-    var vy = 0;
-    var angle = 0;
+    var Game = (function(){
+        var max_x = null;
+        var max_y = null;
+        var x = null;
+        var y = null;
+        var vx = 0;
+        var vy = 0;
+        var angle = 0;
 
-    var dt = 5;
+        var dt = 5;
 
-    function go_up() {
-        vx = 0;
-        if (vy > -1) {
-            vy--;
+        function goUp() {
+            vx = 0;
+            if (vy > -1) {
+                vy--;
+            }
+            if (vy != 0) {
+                angle = 0;
+            }
         }
-        if (vy != 0) {
-            angle = 0;
-        }
-    }
 
-    function go_left() {
-        if (vx > -1) {
-            vx--;
+        function goLeft() {
+            if (vx > -1) {
+                vx--;
+            }
+            if (vx != 0) {
+                angle = 270;
+            }
+            vy = 0;
         }
-        if (vx != 0) {
-            angle = 270;
-        }
-        vy = 0;
-    }
 
-    function go_right() {
-        if (vx < 1) {
-            vx++;
+        function goRight() {
+            if (vx < 1) {
+                vx++;
+            }
+            if (vx != 0) {
+                angle = 90;
+            }
+            vy = 0;
         }
-        if (vx != 0) {
-            angle = 90;
-        }
-        vy = 0;
-    }
 
-    function go_down() {
-        vx = 0;
-        if (vy < 1) {
-            vy++;
+        function goDown() {
+            vx = 0;
+            if (vy < 1) {
+                vy++;
+            }
+            if (vy != 0) {
+                angle = 180;
+            }
         }
-        if (vy != 0) {
-            angle = 180;
-        }
-    }
 
-    function run() {
-        var car = document.getElementById('car');
-        var x_old = x;
-        var y_old = y;
-        x = x + vx * dt;
-        y = y + vy * dt;
-        if (x > max_x || x < 0) {
-            x = x_old;
-        }
-        if (y > max_y || y < 0) {
-            y = y_old;
-        }
-        car.style="left: " + x + "px; top: " + y + "px; transform:rotate(" + angle + "deg);";
+        function setGameField(maxX, maxY) {
+            max_x = maxX;
+            max_y = maxY;
+            x = max_x / 2; //determine middle point
+            y = max_y / 2;
 
-    }
+        }
+
+        function run() {
+            var car = document.getElementById('car');
+            var x_old = x;
+            var y_old = y;
+            x = x + vx * dt;
+            y = y + vy * dt;
+            if (x > max_x || x < 0) {
+                x = x_old;
+            }
+            if (y > max_y || y < 0) {
+                y = y_old;
+            }
+            car.style="left: " + x + "px; top: " + y + "px; transform:rotate(" + angle + "deg);";
+        }
+
+        return {
+            run: run,
+            setGameField: setGameField,
+            goLeft: goLeft,
+            goRight: goRight,
+            goUp: goUp,
+            goDown: goDown,
+        }
+    })();
 
     $( document ).ready(function() {
-        max_x = $('#gameField').width() - $('#car').width();
-        max_y = $('#gameField').height() - $('#car').height();
+        Game.setGameField(
+            $('#gameField').width() - $('#car').width(),
+            $('#gameField').height() - $('#car').height()
+        );
 
-        x = max_x / 2; //determine middle point
-        y = max_y / 2;
 
-        window.setInterval(run, 100);
+        window.setInterval(Game.run, 100);
 
         $(document).keydown(function(e) {
             switch(e.which) {
                 case 37: // left
-                    go_left();
+                    Game.goLeft();
                     break;
 
                 case 38: // up
-                    go_up();
+                    Game.goUp();
                     break;
 
                 case 39: // right
-                    go_right();
+                    Game.goRight();
                     break;
 
                 case 40: // down
-                    go_down();
+                    Game.goDown();
                     break;
 
                 default: return; // exit this handler for other keys
