@@ -1,25 +1,70 @@
 <html>
 <head>
     <style>
-        #car {
-            position: relative;
-            top: 250px;
-            left: 250px;
-            height: 30px;
-            width: 30px;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMODBEsFfQKVgAABARJREFUSMetl8uLHFUUh79zb1V3dff0PDK+ZjSJAYnBTZSIRkQjBEOWZiWIf4NLd9m6CS5duBQ3EjQrSRAEsxAUAsaNqCAKSSbGPJhHpqe7uqrOL4vqGSYiTmv3LQpuFafOx3n86lQZ/2F9Ao0u1swsJjkEAQ3khaqyB/m7MBzXl41jJLDzafravlJvBwsvJ3DwRvrIvMs4UN5ZL+CaVF3JA+cfq6pvXgLfy2ccB7w013yzeOXoF0s3119f8LjcDUm7FTthnhAepWhnFpdCmhxbOfH8meuD3tUv7w9+mxj8MTQ6C/Pv71vvv7q41iezSCQyo4KuCgwjbKdlMGhi5m9tbF28ANW/+U32Aj8Tkmzm9sYLgR7tkBKJJBYJBEC4GSbIEAs315hXeawfkhZe5hOBm1iCheVokYzIKsY1VWxQ4YgOxn6DxxXpB1HIn4z4nn73NAhmQVgnI/CphnyrintyenV2yYBFM45bwjuWUGBZxGxicErAMT7wnCuqEAbYjhz6wA05nyvnupW8Z4mPI5Uwho0XWHlLGkEf1qDt2q1I9CGPmE8MrsLc4a1dEdoO3B7ab69NS8KapYcmBq/D8Bb8kJkhoAByYIAzwMlH9xxombEi/3GVqjlxjQ+p9/P3+P0OgTngxZBx2DIWQ/3oPS/5QwN+0pAu8Luq9ZPEq1Normh/qWyeCk0+Cl2alpJYg0jEgDJUlCooNeQr3+SS9zMjTt7VZliOkiGQIwQ0AbO6SqUqckSO2EBsoagxZkAy5hTRGr7TRma7WssMVF/10Vg+xzJykED5P8jn72GVdbdanAY4AVUwcNWTwAFJyHw0BQSjEmiU4zANsCGEKtt2PjpcPsrI9n0nWG0wFXCoAykTYzQWhOOUVBjgOKKOPtZn2Z0GuFGXuJjBaqxqsI3mgMtx1Vlo1eD+bNipw/8Hl67QxdodICICwnBcEDEMJyASnCbQgcRdk8tpA28cwI7MA59VfRatYM4SAoGWGQM5d1WwooLDBkcIzxaoAfQmAm/h9pRZugic9R4JgWT0uWNmuESByHE+jG1mzfYN8DhxxFvInsZCezQIhoghqlU8qu326iK60N2gipOPRVwJqsIuObFLVtt7B6p6Z0P2rvGeYJcwqXQ583UGKEcgB8r6/cwCRkOOo2Eq+cSpzvFhw+wa+HPnYsYVdy5TsTLSyzKRN4gcD4GWKkr8NqicGHzKfevrYBfm8dMAp0PK6ZjyHU1WSTkZ7tMuoeclsyq4K11aMzan8idxIqS/zElzDVgqEmtvHUlM+1ueLbd89lBelqtlL+bVSi6/9Gews2fcV6fy71S/wlK7XNnRZhKfGB5ME82gBCnfNG9eL/rF0O+cM//1YllU47h7AHIV/Q20HDH4AAAAAElFTkSuQmCC');
+
+        body {
+            padding: 0;
+            margin: 0;
         }
 
         #gameField {
             background-color: #adadad;
+            position: absolute;
+            width: 100%;
+            height: 100%;
         }
+
+        #car {
+            position: absolute;
+            top: 250px;
+            left: 250px;
+            height: 30px;
+            width: 30px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMaBi8XN9a9EQAABI5JREFUSMetl8tvVFUcxz/nnHvnzuvOtFD6Qii0BREVJcQiCgESFprUKCEuNGqIK4kxJpgQV/4BujG6sYkkJiTEqCFs0I1BCSHahRLkpdS2tKX0NbSd3unMfc09LqY+NvZOMr3JWd3f/X5+r/M75wrqeLryppnKZjMdttHTm/SOdye8F/Jm1KWBhUAOj/rJcyOedXZqKbhbWS4tjy0GQZymiDPYZEujtXVDvq8zeaQnmv30cFNlw+YcWGbtvRvA3SJcKqYm7hidJwfHl35YKDwoTjhRuJquEQfOZLOpvds7+vbbzhf7tZvc2Awy+e+Xdgjrbei03U1XlPrcV60v/VSu/IJTclbTlXHgVMrK79mYObUj4SbzWY3MAzaQWVlZkDnIZzR7Ml7+mZ51pzKZVD5ONxZ86PGtbb2mc8j2Z7CbAHOlOlXg72QmIJ2DtDfDo0nn+QOPdbU0DL4+ev9EizNO77oQAUQlgVuAyiz4BYiKgF9Lf4ft0lm+x7U/77/bcHNtbrb0YH9EqxXghoKyD9LQSBMMCaYGNJhpkArmiya7zyvGF1zRUHPpSGNJjeOCNjQFU3JzZgue1waAZU2xu32MzV4NrHSE1rHxxIMRYCqIJHw728n18X7anadoK28h0hHj6VEuj1xhb/d3HNtUWPGWNQADWmq+mWjm3MgRusIddGe76NrVC1pTGhEUCtN8crWPgMv0ty3XUcA6wIaSv4350a4PBlvoWR8wL6f5raiZvHGfiIi5YI55OU3RD3j/So59R8tIKW83DP7yWCJ15prPbGWRpuo9pKXxkxUca56IiEVvkemFMeaDCWZKRc4Oab56OWHuHXAbAwciEV6fiwjDJQy7TDVVYNKZ4kFgAppy5KObPSzlwlKF24sRR0gEDUf80aAa0IKPm1KCPmuY/rYy3d0+bTlIpqAkYMwVnLmhOLugQER8OKgGGgbnEkhHwXtPVHl1s8+iBwmgqkFIaM9BxxbN0wdCHr5gcvUWmFb8YIo1EFKwLq14o7vKvZICIViZGWgg0ivjswJvPxfQkpFIEd/W8Z5JQT5RxRQCpET/317RoDKQNKrUwa0jYtCGFGghEXGKEaQTIFmDiBFQm4CyVtQYuK5PNd7EVDIUQlBbdfmJYYigYfBoobJNUKsvUiBi0igEDE2XdzUMHp4pHxeSGljI2DmspGC84L7SMLiqdU5KAYiV5hKxyY60zq7J6YSQIGVdNa7WcRbX3dWlwEBTg6/aVSEshwZ6LfaxksLZ2gQ/FwwSStZSvsIR/4VKuHTTYqMNSorlhsEHd3a81dfhcX5SUdSCsjapVMGtQjkUlHxB0VXcmTQ5fTHDkxtC9m1rfafhGv86NPX90e7Mrde2L+z87I9WenI2RijJFCOkAlcYVLRkaE5x4pECc2Hq9xtjsxdiMxn7J2FKSOWG93dUnj243skvBeCJJJ628HUCoRXtpsfrvfOk02L869Gmk7cmyncWKlW/oettm4Wa8RKpNw+3HH7xoeUTXVZ4wDaCrND6n4lRigxnwlOXz43ZA6d/LFxsT/qVaZfqarp/ARZ4wEkqJfehAAAAAElFTkSuQmCC');
+            z-index: 0;
+        }
+
+        .obstacle {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            vertical-align: middle;
+            z-index: 0;
+        }
+
+        .obstacle p {
+            color: white;
+            margin: 6px 0 6px 0;
+        }
+
+        #score {
+            position: absolute;
+            right: 40px;
+            top: 10px;
+            color: darkgreen;
+            z-index: 1;
+        }
+
+        #time {
+            position: absolute;
+            left: 40px;
+            top: 10px;
+            color: darkred;
+            z-index: 1;
+        }
+
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js'></script>
 </head>
 <body>
 <script>
 
     var Game = (function () {
+        var item_size = 30; //size of car and obstacle in pixels
+        var score;
+        var start_time;
+
         var max_x = null;
         var max_y = null;
         var x = null;
@@ -34,7 +79,13 @@
         var angle = 0.0;
         var delta_angle = 5;
 
-        var dt = 5; // time quant
+        var dt = 5; // step
+        var quant = 50;
+
+        //obstacles
+        var obstacles = [];
+        var max_obstacle_ttl = 12000;
+        var min_obstacle_ttl = 12000;
 
         //keys
         var isArrowUpPressed = false;
@@ -115,15 +166,106 @@
             max_y = maxY;
             x = max_x / 2; //determine middle point
             y = max_y / 2;
-
+            score = 0;
+            start_time = new Date();
         }
 
         function toRadians(angle) {
             return angle * (Math.PI / 180);
         }
 
+
+        function byteToHex(b) {
+            var hexChar = ["0", "1", "2", "3", "4", "5", "6", "7","8", "9", "A", "B", "C", "D", "E", "F"];
+            return hexChar[(b >> 4) & 0x0f] + hexChar[b & 0x0f];
+        }
+
+        function getRandomColor() {
+            var phase = 0;
+            var center = 128;
+            var width = 127;
+            var frequency = Math.PI*2;
+            var i = Math.random();
+            var red   = Math.sin(frequency*i+2+phase) * width + center;
+            var green = Math.sin(frequency*i+0+phase) * width + center;
+            var blue  = Math.sin(frequency*i+4+phase) * width + center;
+            return '#' + byteToHex(red) + byteToHex(green) + byteToHex(blue);
+        }
+
+        function createObstacle() {
+            var nextTime = Math.random() * 2000 + 3000;
+
+            var obstacle = {
+                ttl: Math.random() * (max_obstacle_ttl - min_obstacle_ttl) + min_obstacle_ttl, // time to live in ms
+                x: (max_x - item_size) * Math.random(),
+                y: (max_y - item_size) * Math.random(),
+                color: getRandomColor()
+            };
+
+            obstacles.push(obstacle);
+
+            window.setTimeout(createObstacle, nextTime);
+        }
+
+        function getObstacleId(obstacle) {
+            return parseInt(obstacle.x) + '_' + parseInt(obstacle.y);
+        }
+
+        function redrawObstacles() {
+            for (var i = 0; i < obstacles.length; i++) {
+                var obstacleId = getObstacleId(obstacles[i]);
+                var obstacleElement = $('#' + obstacleId);
+                if (obstacleElement.length == 0) {//create if not exists
+                    obstacleElement = $('<div id="' + obstacleId + '" class="obstacle"><p></p></div>');
+                    obstacleElement.css({
+                        left: obstacles[i].x,
+                        top: obstacles[i].y,
+                        'background-color': obstacles[i].color
+                    });
+                    $('#gameField').append(obstacleElement);
+                }
+                obstacleElement.css({opacity: obstacles[i].ttl / max_obstacle_ttl});
+
+                //display here seconds to live
+                obstacleElement.find('p').html(Math.round(obstacles[i].ttl / 1000));
+            }
+        }
+
+        function handleObstacles() {
+            var newObstacles = [];
+            for (var i = 0; i < obstacles.length; i++) {
+                var obstacleId = getObstacleId(obstacles[i]);
+                obstacles[i].ttl -= quant;
+
+                //handle collision
+                if ((Math.abs(obstacles[i].x - x) < item_size) && (Math.abs(obstacles[i].y - y) < item_size)) {
+                    score++;
+                    $('#' + obstacleId).remove();
+                    continue;
+                }
+
+                if (obstacles[i].ttl > 0) {
+                    newObstacles.push(obstacles[i]);
+                } else {
+                    $('#' + obstacleId).remove();
+                }
+
+            }
+            obstacles = newObstacles;
+            redrawObstacles();
+        }
+
+        function redrawScreenMessages() {
+            $('#score span').html(score);
+
+            var currentTime = new Date();
+            $('#time span').html(Math.floor((currentTime.getTime() - start_time.getTime()) / 1000));
+        }
+
         function run() {
             handleKeys();
+            handleObstacles();
+            redrawScreenMessages();
 
             var x_old = x;
             var y_old = y;
@@ -148,15 +290,16 @@
                 v = 0;
             }
 
-            var car = document.getElementById('car');
-            car.style = "left: " + x + "px; top: " + y + "px; transform:rotate(" + angle + "deg);";
+            $('#car').css({ left: x, top: y, transform: 'rotate(' + angle + 'deg)' });
         }
 
         return {
+            quant: quant,
             run: run,
             setGameField: setGameField,
             keyUp: keyUp,
             keyDown: keyDown,
+            createObstacle: createObstacle
         }
     })();
 
@@ -166,8 +309,9 @@
                 $('#gameField').height() - $('#car').height()
         );
 
+        Game.createObstacle();
 
-        window.setInterval(Game.run, 50);
+        window.setInterval(Game.run, Game.quant);
 
         $(document).keydown(function (e) {
             var keyCode = e.keyCode || e.which;
@@ -190,8 +334,10 @@
 
 
 </script>
-<div id="gameField" style="width: 100%; height: 100%;">
-    <div id="car"></div>
+<div id='gameField' style='width: 100%; height: 100%;'>
+    <div id='car'></div>
+    <div id='score'><h3>Score: <span></span></h3></div>
+    <div id='time'><h3>Time: <span></span></h3></div>
 </div>
 </body>
 <html>
