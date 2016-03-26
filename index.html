@@ -65,6 +65,8 @@
         var score;
         var start_time;
 
+        var collision = new Audio('collision.mp3');
+
         var max_x = null;
         var max_y = null;
         var x = null;
@@ -239,6 +241,7 @@
 
                 //handle collision
                 if ((Math.abs(obstacles[i].x - x) < item_size) && (Math.abs(obstacles[i].y - y) < item_size)) {
+                    collision.play();
                     score++;
                     $('#' + obstacleId).remove();
                     continue;
