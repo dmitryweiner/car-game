@@ -1,5 +1,6 @@
+import '../styles/index.scss';
 
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     Game.setGameField(
         $('#gameField').width() - $('#car').width(),
         $('#gameField').height() - $('#car').height()
