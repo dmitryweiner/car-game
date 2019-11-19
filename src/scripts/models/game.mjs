@@ -1,285 +1,124 @@
-var Game = (function () {
-    var item_size = 30; //size of car and obstacle in pixels
-    var score;
-    var start_time;
+import Car from './car.mjs';
+import Bonus from './bonus.mjs';
+import * as constants from '../constants.mjs';
+import { distance} from '../utils.mjs';
 
-    var collision = new Audio('sounds/collision.mp3');
+export default class Game {
 
-    var max_x = null;
-    var max_y = null;
-    var x = null;
-    var y = null;
-
-    var v = 0.0;
-    var v_decr = 0.05; // decrement of the velocity with time
-    var v_acc = 0.2; // increment of the velocity with pressing accelerator
-    var v_brake = 0.3; // decrement of brakes
-    var v_max = 3.0;
-
-    var angle = 0.0;
-    var delta_angle = 5;
-
-    var dt = 5; // step
-    var quant = 50;
-
-    //obstacles
-    var obstacles = [];
-    var max_obstacle_ttl = 12000;
-    var min_obstacle_ttl = 12000;
-
-    //keys
-    var isArrowUpPressed = false;
-    var isArrowDownPressed = false;
-    var isArrowLeftPressed = false;
-    var isArrowRightPressed = false;
-
-    function keyUp(code) {
-        switch (code) {
-            case 37: // left
-                isArrowLeftPressed = false;
-                break;
-
-            case 38: // up
-                isArrowUpPressed = false;
-                break;
-
-            case 39: // right
-                isArrowRightPressed = false;
-                break;
-
-            case 40: // down
-                isArrowDownPressed = false;
-                break;
-        }
-    }
-
-    function keyDown(code) {
-        switch (code) {
-            case 37: // left
-                isArrowLeftPressed = true;
-                break;
-
-            case 38: // up
-                isArrowUpPressed = true;
-                break;
-
-            case 39: // right
-                isArrowRightPressed = true;
-                break;
-
-            case 40: // down
-                isArrowDownPressed = true;
-                break;
-        }
-    }
-
-    function mouseDown(element) {
-        if ($(element).hasClass('left')) {
-            isArrowLeftPressed = true;
-        }
-
-        if ($(element).hasClass('right')) {
-            isArrowRightPressed = true;
-        }
-
-        if ($(element).hasClass('up')) {
-            isArrowUpPressed = true;
-        }
-
-        if ($(element).hasClass('down')) {
-            isArrowDownPressed = true;
-        }
-
-    }
-
-    function mouseUp(element) {
-        if ($(element).hasClass('left')) {
-            isArrowLeftPressed = false;
-        }
-
-        if ($(element).hasClass('right')) {
-            isArrowRightPressed = false;
-        }
-
-        if ($(element).hasClass('up')) {
-            isArrowUpPressed = false;
-        }
-
-        if ($(element).hasClass('down')) {
-            isArrowDownPressed = false;
-        }
-
-    }
-
-    function handleKeys() {
-
-        if (isArrowDownPressed) {
-            v = v - v_brake;
-            if (v < 0) {
-                v = 0;
-            }
-        } else if (isArrowUpPressed) {
-            v = v + v_acc;
-            if (v > v_max) {
-                v = v_max;
-            }
-        }
-
-        if (isArrowLeftPressed) {
-            angle = angle - delta_angle;
-            if (angle < 0) {
-                angle = 360 + angle;
-            }
-        } else if (isArrowRightPressed) {
-            angle = angle + delta_angle;
-            if (angle > 359) {
-                angle = angle - 360;
-            }
-        }
-
-    }
-
-    function setGameField(maxX, maxY) {
-        max_x = maxX;
-        max_y = maxY;
-        x = max_x / 2; //determine middle point
-        y = max_y / 2;
-        score = 0;
-        start_time = new Date();
-    }
-
-    function toRadians(angle) {
-        return angle * (Math.PI / 180);
-    }
-
-
-    function byteToHex(b) {
-        var hexChar = ["0", "1", "2", "3", "4", "5", "6", "7","8", "9", "A", "B", "C", "D", "E", "F"];
-        return hexChar[(b >> 4) & 0x0f] + hexChar[b & 0x0f];
-    }
-
-    function getRandomColor() {
-        var phase = 0;
-        var center = 128;
-        var width = 127;
-        var frequency = Math.PI*2;
-        var i = Math.random();
-        var red   = Math.sin(frequency*i+2+phase) * width + center;
-        var green = Math.sin(frequency*i+0+phase) * width + center;
-        var blue  = Math.sin(frequency*i+4+phase) * width + center;
-        return '#' + byteToHex(red) + byteToHex(green) + byteToHex(blue);
-    }
-
-    function createObstacle() {
-        var nextTime = Math.random() * 2000 + 3000;
-
-        var obstacle = {
-            ttl: Math.random() * (max_obstacle_ttl - min_obstacle_ttl) + min_obstacle_ttl, // time to live in ms
-            x: (max_x - item_size) * Math.random(),
-            y: (max_y - item_size) * Math.random(),
-            color: getRandomColor()
+    constructor(gameField, popSize = 0) {
+        this.gameField = gameField;
+        this.maxX = gameField.clientWidth;
+        this.maxY = gameField.clientHeight;
+        this.userScore = 0;
+        this.aiScore = 0;
+        this.collision = new Audio('public/sounds/collision.mp3');
+        this.bonuses = [];
+        this.userCar = new Car(
+            this.maxX / 2 - Car.SIZE / 2,
+            this.maxY / 2 - Car.SIZE / 2,
+            gameField
+        );
+        this.aiCars = [];
+        this.buttonsPressed = {
+            accelerator: false,
+            brakes: false,
+            left: false,
+            right: false,
         };
 
-        obstacles.push(obstacle);
-
-        window.setTimeout(createObstacle, nextTime);
     }
 
-    function getObstacleId(obstacle) {
-        return parseInt(obstacle.x) + '_' + parseInt(obstacle.y);
+    createBonus() {
+        const bonus = new Bonus(
+            (this.maxX - Bonus.SIZE) * Math.random(),
+            (this.maxY - Bonus.SIZE) * Math.random(),
+            this.gameField
+        );
+
+        this.bonuses.push(bonus);
     }
+    
+    handleKeyDown(code) {
+        switch (code) {
+            case 37: // left
+                this.buttonsPressed.left = true;
+                break;
 
-    function redrawObstacles() {
-        for (var i = 0; i < obstacles.length; i++) {
-            var obstacleId = getObstacleId(obstacles[i]);
-            var obstacleElement = $('#' + obstacleId);
-            if (obstacleElement.length == 0) {//create if not exists
-                obstacleElement = $('<div id="' + obstacleId + '" class="obstacle"><p></p></div>');
-                obstacleElement.css({
-                    left: obstacles[i].x,
-                    top: obstacles[i].y,
-                    'background-color': obstacles[i].color
-                });
-                $('#gameField').append(obstacleElement);
-            }
-            obstacleElement.css({opacity: obstacles[i].ttl / max_obstacle_ttl});
+            case 38: // up
+                this.buttonsPressed.accelerator = true;
+                break;
 
-            //display here seconds to live
-            obstacleElement.find('p').html(Math.round(obstacles[i].ttl / 1000));
+            case 39: // right
+                this.buttonsPressed.right = true;
+                break;
+
+            case 40: // down
+                this.buttonsPressed.brakes = true;
+                break;
         }
     }
 
-    function handleObstacles() {
-        var newObstacles = [];
-        for (var i = 0; i < obstacles.length; i++) {
-            var obstacleId = getObstacleId(obstacles[i]);
-            obstacles[i].ttl -= quant;
+    handleKeyUp(code) {
+        switch (code) {
+            case 37: // left
+                this.buttonsPressed.left = false;
+                break;
+
+            case 38: // up
+                this.buttonsPressed.accelerator = false;
+                break;
+
+            case 39: // right
+                this.buttonsPressed.right = false;
+                break;
+
+            case 40: // down
+                this.buttonsPressed.brakes = false;
+                break;
+        }
+    }
+
+    handleBonuses() {
+        const newBonuses = [];
+        for (let i = 0; i < this.bonuses.length; i++) {
+            this.bonuses[i].ttl -= constants.DELAY;
 
             //handle collision
-            if ((Math.abs(obstacles[i].x - x) < item_size) && (Math.abs(obstacles[i].y - y) < item_size)) {
-                collision.play();
-                score++;
-                $('#' + obstacleId).remove();
+            // TODO: handle collision with AI cars
+            if (distance(this.bonuses[i].x, this.bonuses[i].y, this.userCar.x, this.userCar.y) < (Bonus.SIZE + Car.SIZE) / 2) {
+                this.collision.play(); // TODO check if in console
+                this.userScore++;
+                this.bonuses[i].delete();
                 continue;
             }
 
-            if (obstacles[i].ttl > 0) {
-                newObstacles.push(obstacles[i]);
+            if (this.bonuses[i].ttl > 0) {
+                newBonuses.push(this.bonuses[i]);
             } else {
-                $('#' + obstacleId).remove();
+                this.bonuses[i].delete();
             }
 
         }
-        obstacles = newObstacles;
-        redrawObstacles();
+        this.bonuses = newBonuses;
+        this.bonuses.map((bonus) => bonus.redraw());
     }
 
-    function redrawScreenMessages() {
-        $('#score span').html(score);
-
-        var currentTime = new Date();
-        $('#time span').html(Math.floor((currentTime.getTime() - start_time.getTime()) / 1000));
+    handleUserCar() {
+        this.userCar.handleControls(this.buttonsPressed);
+        this.userCar.doTurn();
+        this.userCar.redraw();
     }
 
-    function run() {
-        handleKeys();
-        handleObstacles();
-        redrawScreenMessages();
-
-        var x_old = x;
-        var y_old = y;
-
-        var vx = parseFloat(v * Math.sin(toRadians(180 - angle)));
-        var vy = parseFloat(v * Math.cos(toRadians(180 - angle)));
-        x = x + vx * dt;
-        y = y + vy * dt;
-
-        v = v - v_decr;
-        if (v < 0) {
-            v = 0;
-        }
-
-        //collision with border
-        if (x > (max_x - 5) || x < 0) {
-            x = x_old;
-            v = 0;
-        }
-        if (y > (max_y - 5) || y < 0) {
-            y = y_old;
-            v = 0;
-        }
-
-        $('#car').css({ left: x, top: y, transform: 'rotate(' + angle + 'deg)' });
+    redrawScreenMessages() {
+        // TODO: check if console
+        document.getElementById('userScore').innerText = this.userScore;
+        document.getElementById('aiScore').innerText = this.aiScore;
     }
 
-    return {
-        quant: quant,
-        run: run,
-        setGameField: setGameField,
-        keyUp: keyUp,
-        keyDown: keyDown,
-        createObstacle: createObstacle,
-        mouseDown: mouseDown,
-        mouseUp: mouseUp
+    tick() {
+        this.handleBonuses();
+        this.handleUserCar();
+        // TODO: handle AI cars
+        this.redrawScreenMessages();
     }
-})();
+}

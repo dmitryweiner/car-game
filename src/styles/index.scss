@@ -1,6 +1,8 @@
 body {
     padding: 0;
     margin: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 #gameField {
@@ -10,31 +12,27 @@ body {
     height: 100%;
 }
 
-#car {
+.car {
     position: absolute;
-    top: 250px;
-    left: 250px;
     height: 30px;
     width: 30px;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AMaBi8XN9a9EQAABI5JREFUSMetl8tvVFUcxz/nnHvnzuvOtFD6Qii0BREVJcQiCgESFprUKCEuNGqIK4kxJpgQV/4BujG6sYkkJiTEqCFs0I1BCSHahRLkpdS2tKX0NbSd3unMfc09LqY+NvZOMr3JWd3f/X5+r/M75wrqeLryppnKZjMdttHTm/SOdye8F/Jm1KWBhUAOj/rJcyOedXZqKbhbWS4tjy0GQZymiDPYZEujtXVDvq8zeaQnmv30cFNlw+YcWGbtvRvA3SJcKqYm7hidJwfHl35YKDwoTjhRuJquEQfOZLOpvds7+vbbzhf7tZvc2Awy+e+Xdgjrbei03U1XlPrcV60v/VSu/IJTclbTlXHgVMrK79mYObUj4SbzWY3MAzaQWVlZkDnIZzR7Ml7+mZ51pzKZVD5ONxZ86PGtbb2mc8j2Z7CbAHOlOlXg72QmIJ2DtDfDo0nn+QOPdbU0DL4+ev9EizNO77oQAUQlgVuAyiz4BYiKgF9Lf4ft0lm+x7U/77/bcHNtbrb0YH9EqxXghoKyD9LQSBMMCaYGNJhpkArmiya7zyvGF1zRUHPpSGNJjeOCNjQFU3JzZgue1waAZU2xu32MzV4NrHSE1rHxxIMRYCqIJHw728n18X7anadoK28h0hHj6VEuj1xhb/d3HNtUWPGWNQADWmq+mWjm3MgRusIddGe76NrVC1pTGhEUCtN8crWPgMv0ty3XUcA6wIaSv4350a4PBlvoWR8wL6f5raiZvHGfiIi5YI55OU3RD3j/So59R8tIKW83DP7yWCJ15prPbGWRpuo9pKXxkxUca56IiEVvkemFMeaDCWZKRc4Oab56OWHuHXAbAwciEV6fiwjDJQy7TDVVYNKZ4kFgAppy5KObPSzlwlKF24sRR0gEDUf80aAa0IKPm1KCPmuY/rYy3d0+bTlIpqAkYMwVnLmhOLugQER8OKgGGgbnEkhHwXtPVHl1s8+iBwmgqkFIaM9BxxbN0wdCHr5gcvUWmFb8YIo1EFKwLq14o7vKvZICIViZGWgg0ivjswJvPxfQkpFIEd/W8Z5JQT5RxRQCpET/317RoDKQNKrUwa0jYtCGFGghEXGKEaQTIFmDiBFQm4CyVtQYuK5PNd7EVDIUQlBbdfmJYYigYfBoobJNUKsvUiBi0igEDE2XdzUMHp4pHxeSGljI2DmspGC84L7SMLiqdU5KAYiV5hKxyY60zq7J6YSQIGVdNa7WcRbX3dWlwEBTg6/aVSEshwZ6LfaxksLZ2gQ/FwwSStZSvsIR/4VKuHTTYqMNSorlhsEHd3a81dfhcX5SUdSCsjapVMGtQjkUlHxB0VXcmTQ5fTHDkxtC9m1rfafhGv86NPX90e7Mrde2L+z87I9WenI2RijJFCOkAlcYVLRkaE5x4pECc2Hq9xtjsxdiMxn7J2FKSOWG93dUnj243skvBeCJJJ628HUCoRXtpsfrvfOk02L869Gmk7cmyncWKlW/oettm4Wa8RKpNw+3HH7xoeUTXVZ4wDaCrND6n4lRigxnwlOXz43ZA6d/LFxsT/qVaZfqarp/ARZ4wEkqJfehAAAAAElFTkSuQmCC');
     z-index: 0;
 }
 
-.obstacle {
+.bonus {
     position: absolute;
     height: 30px;
     width: 30px;
     text-align: center;
     vertical-align: middle;
     z-index: 0;
-}
-
-.obstacle p {
     color: white;
-    margin: 6px 0 6px 0;
+    line-height: 30px;
+    border-radius: 5px;
 }
 
-#score {
+.userScore {
     position: absolute;
     right: 40px;
     top: 10px;
@@ -42,7 +40,7 @@ body {
     z-index: 1;
 }
 
-#time {
+.aiScore {
     position: absolute;
     left: 40px;
     top: 10px;

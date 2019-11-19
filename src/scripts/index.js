@@ -1,38 +1,38 @@
 import '../styles/index.scss';
+import Game from './models/game.mjs';
+import { gameTick } from './utils.mjs';
+import * as constants from './constants.mjs';
 
-document.addEventListener('DOMContentLoaded', function () {
-    Game.setGameField(
-        $('#gameField').width() - $('#car').width(),
-        $('#gameField').height() - $('#car').height()
-    );
+document.addEventListener('DOMContentLoaded', () => {
+    const game = new Game(document.getElementById('gameField'));
 
-    Game.createObstacle();
+    gameTick(() => {
+        game.tick();
+    }, constants.FPS);
 
-    window.setInterval(Game.run, Game.quant);
+    setInterval(() => {
+        game.createBonus();
+    }, constants.BONUS_DELAY);
 
-    $(document).keydown(function (e) {
-        var keyCode = e.keyCode || e.which;
+    document.addEventListener('keydown', (e) => {
+        // TODO: rewrite https://learn.javascript.ru/keyboard-events
+        const keyCode = e.keyCode || e.which;
         if (keyCode > 40 || keyCode < 37) {
             return;
         }
-        Game.keyDown(keyCode);
+        game.handleKeyDown(keyCode);
         e.preventDefault(); // prevent the default action (scroll / move caret)
+        return false;
     });
 
-    $(document).keyup(function (e) {
-        var keyCode = e.keyCode || e.which;
+    document.addEventListener('keyup', (e) => {
+        // TODO: rewrite https://learn.javascript.ru/keyboard-events
+        const keyCode = e.keyCode || e.which;
         if (keyCode > 40 || keyCode < 37) {
             return;
         }
-        Game.keyUp(keyCode);
+        game.handleKeyUp(keyCode);
         e.preventDefault(); // prevent the default action (scroll / move caret)
-    });
-
-    $('.control').on('tapstart', function(event) {
-        Game.mouseDown(this);
-    });
-
-    $('.control').on('tapend', function(event) {
-        Game.mouseUp(this);
+        return false;
     });
 });
