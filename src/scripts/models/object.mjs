@@ -1,4 +1,4 @@
-import { generateId } from '../utils.mjs';
+import { generateId, isConsole } from '../utils.mjs';
 
 class SimpleObject {
 
@@ -10,7 +10,7 @@ class SimpleObject {
         this.size = SimpleObject.SIZE;
         this.needDelete = false;
 
-        if (this.inConsole()) return;
+        if (isConsole()) return;
 
         this.element = document.createElement('div');
         this.element.setAttribute('id', this.id);
@@ -19,21 +19,18 @@ class SimpleObject {
     }
 
     delete() {
-        if (this.inConsole()) return;
+        if (isConsole()) return;
 
         this.element.parentNode.removeChild(this.element);
     }
 
     redraw() {
-        if (this.inConsole()) return;
+        if (isConsole()) return;
 
         this.element.style.left = this.x + 'px';
         this.element.style.top = this.y + 'px';
     }
 
-    inConsole() {
-        return typeof this.gameField['inConsole'] !== 'undefined';
-    }
 }
 
 SimpleObject.SIZE = 10;

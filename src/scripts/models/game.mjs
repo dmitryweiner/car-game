@@ -1,7 +1,7 @@
 import Car from './car.mjs';
 import Bonus from './bonus.mjs';
 import * as constants from '../constants.mjs';
-import { distance} from '../utils.mjs';
+import { distance, isConsole } from '../utils.mjs';
 
 export default class Game {
 
@@ -11,7 +11,7 @@ export default class Game {
         this.maxY = gameField.clientHeight;
         this.userScore = 0;
         this.aiScore = 0;
-        this.collision = new Audio('public/sounds/collision.mp3');
+        this.collision = isConsole() ? null : new Audio('public/sounds/collision.mp3');
         this.bonuses = [];
         this.userCar = new Car(
             this.maxX / 2 - Car.SIZE / 2,
@@ -86,7 +86,7 @@ export default class Game {
             //handle collision
             // TODO: handle collision with AI cars
             if (distance(this.bonuses[i].x, this.bonuses[i].y, this.userCar.x, this.userCar.y) < (Bonus.SIZE + Car.SIZE) / 2) {
-                this.collision.play(); // TODO check if in console
+                if (!isConsole()) this.collision.play();
                 this.userScore++;
                 this.bonuses[i].delete();
                 continue;

@@ -1,6 +1,6 @@
 import SimpleObject from './object';
 import * as constants from '../constants.mjs';
-import { getRandomColor } from '../utils';
+import { getRandomColor, isConsole } from '../utils';
 
 class Bonus extends SimpleObject {
     constructor(x, y, gameField) {
@@ -8,7 +8,7 @@ class Bonus extends SimpleObject {
         this.color = getRandomColor();
         this.ttl = Math.random() * (constants.MAX_BONUS_TTL - constants.MIM_BONUS_TTL) + constants.MIM_BONUS_TTL; // time to live in ms
 
-        if (this.inConsole()) return;
+        if (isConsole()) return;
 
         this.element.setAttribute('class', 'bonus');
         this.element.style.backgroundColor = this.color;
@@ -17,7 +17,7 @@ class Bonus extends SimpleObject {
     redraw() {
         super.redraw();
 
-        if (this.inConsole()) return;
+        if (isConsole()) return;
 
         this.element.style.opacity = '' + this.ttl / constants.MAX_BONUS_TTL;
 

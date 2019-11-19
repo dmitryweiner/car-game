@@ -1,5 +1,6 @@
 import SimpleObject from './object.mjs';
 import * as constants from '../constants.mjs';
+import {isConsole} from "../utils";
 
 export default class MovingObject extends SimpleObject {
 
@@ -40,7 +41,7 @@ export default class MovingObject extends SimpleObject {
     redraw() {
         super.redraw();
 
-        if (this.inConsole()) return;
+        if (isConsole()) return;
         this.element.style.transform = 'rotate(' + (this.direction + Math.PI / 2) + 'rad)';
     }
 }

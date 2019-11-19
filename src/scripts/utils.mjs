@@ -148,3 +148,6 @@ export function getRandomColor() {
     return '#' + byteToHex(red) + byteToHex(green) + byteToHex(blue);
 }
 
+export function isConsole() {
+    return typeof document === 'undefined';
+}

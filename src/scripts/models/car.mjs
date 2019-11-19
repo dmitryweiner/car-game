@@ -1,11 +1,13 @@
 import MovingObject from './moving-object';
 import * as constants from '../constants.mjs';
+import { isConsole } from '../utils.mjs';
 
 class Car extends MovingObject{
 
     constructor(x, y, gameField) {
         super(x, y, gameField);
 
+        if (isConsole()) return;
         const element = document.getElementById(this.id);
         element.setAttribute('class', 'car');
     }
