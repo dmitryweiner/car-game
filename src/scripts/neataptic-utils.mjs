@@ -1,4 +1,4 @@
-import * as constants from './const.mjs';
+import * as constants from './constants.mjs';
 import neataptic from 'neataptic';
 
 /**
@@ -53,7 +53,7 @@ export function createNeatapticObject(popSize = null) {
     const realPopSize = popSize ? popSize : constants.POPULATION_SIZE;
     return new neataptic.Neat(
         constants.SECTORS_OF_VISION, // inputs: sectors around
-        2, // output channels: angle and speed
+        4, // output channels: accelerator, brakes, left, right
         null, // ranking function
         {
             mutation: [

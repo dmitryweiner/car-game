@@ -1,4 +1,4 @@
-import MovingObject from './moving-object';
+import MovingObject from './moving-object.mjs';
 import * as constants from '../constants.mjs';
 import { isConsole } from '../utils.mjs';
 

@@ -1,6 +1,6 @@
-import SimpleObject from './object';
+import SimpleObject from './object.mjs';
 import * as constants from '../constants.mjs';
-import { getRandomColor, isConsole } from '../utils';
+import { getRandomColor, isConsole } from '../utils.mjs';
 
 class Bonus extends SimpleObject {
     constructor(x, y, gameField) {

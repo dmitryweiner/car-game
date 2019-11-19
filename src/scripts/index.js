@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, constants.FPS);
 
     setInterval(() => {
-        game.createBonus();
+        game.addBonus();
     }, constants.BONUS_DELAY);
 
     document.addEventListener('keydown', (e) => {

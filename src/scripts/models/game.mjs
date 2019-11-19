@@ -1,11 +1,14 @@
 import Car from './car.mjs';
+import AiCar from './ai-car.mjs';
 import Bonus from './bonus.mjs';
 import * as constants from '../constants.mjs';
 import { distance, isConsole } from '../utils.mjs';
+import { createNeatapticObject } from '../neataptic-utils.mjs';
+import population from '../population.mjs';
 
 export default class Game {
 
-    constructor(gameField, popSize = 0) {
+    constructor(gameField, isTraining = false, initialPopulation) {
         this.gameField = gameField;
         this.maxX = gameField.clientWidth;
         this.maxY = gameField.clientHeight;
@@ -13,11 +16,7 @@ export default class Game {
         this.aiScore = 0;
         this.collision = isConsole() ? null : new Audio('public/sounds/collision.mp3');
         this.bonuses = [];
-        this.userCar = new Car(
-            this.maxX / 2 - Car.SIZE / 2,
-            this.maxY / 2 - Car.SIZE / 2,
-            gameField
-        );
+        this.userCar = null;
         this.aiCars = [];
         this.buttonsPressed = {
             accelerator: false,
@@ -26,9 +25,30 @@ export default class Game {
             right: false,
         };
 
+        this.neat = createNeatapticObject();
+        if (isTraining) {
+            if (initialPopulation) {
+                this.neat.population = initialPopulation;
+            }
+        } else {
+            const truncatedPopulation = population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB);
+            this.neat.population = truncatedPopulation.map((brain) => neataptic.Network.fromJSON(brain));
+            this.userCar = new Car(
+                this.maxX / 2 - Car.SIZE / 2,
+                this.maxY / 2 - Car.SIZE / 2,
+                gameField
+            );
+        }
+
+        this.neat.population.map((brain) => {
+            brain.score = 0;
+            this.aiCars.push(
+                new AiCar(null, null, this.gameField, brain)
+            );
+        });
     }
 
-    createBonus() {
+    addBonus() {
         const bonus = new Bonus(
             (this.maxX - Bonus.SIZE) * Math.random(),
             (this.maxY - Bonus.SIZE) * Math.random(),
@@ -84,10 +104,20 @@ export default class Game {
             this.bonuses[i].ttl -= constants.DELAY;
 
             //handle collision
-            // TODO: handle collision with AI cars
-            if (distance(this.bonuses[i].x, this.bonuses[i].y, this.userCar.x, this.userCar.y) < (Bonus.SIZE + Car.SIZE) / 2) {
+            if (this.userCar && distance(this.bonuses[i].x, this.bonuses[i].y, this.userCar.x, this.userCar.y) < (Bonus.SIZE + Car.SIZE) / 2) {
                 if (!isConsole()) this.collision.play();
                 this.userScore++;
+                this.bonuses[i].delete();
+                continue;
+            }
+
+            const aiCarFoundBonus = this.aiCars.find((aiCar) => {
+                return distance(this.bonuses[i].x, this.bonuses[i].y, aiCar.x, aiCar.y) < (Bonus.SIZE + Car.SIZE) / 2;
+            });
+            if (aiCarFoundBonus) {
+                // TODO: count ai score somehow
+                aiCarFoundBonus.brain.score += constants.BONUS_REWARD;
+                aiCarFoundBonus.ttl += constants.BONUS_TTL_REWARD;
                 this.bonuses[i].delete();
                 continue;
             }
@@ -104,13 +134,29 @@ export default class Game {
     }
 
     handleUserCar() {
+        if (!this.userCar) return;
+
         this.userCar.handleControls(this.buttonsPressed);
         this.userCar.doTurn();
         this.userCar.redraw();
     }
 
+    handleAiCars() {
+        this.aiCars = this.aiCars.filter((aiCar) => {
+            aiCar.seeBonuses(this.bonuses);
+            aiCar.doTurn();
+            aiCar.redraw();
+            if (aiCar.ttl < 0) {
+                aiCar.delete();
+                return false;
+            }
+            return true;
+        });
+    }
+
     redrawScreenMessages() {
-        // TODO: check if console
+        if (isConsole()) return;
+
         document.getElementById('userScore').innerText = this.userScore;
         document.getElementById('aiScore').innerText = this.aiScore;
     }
@@ -118,7 +164,7 @@ export default class Game {
     tick() {
         this.handleBonuses();
         this.handleUserCar();
-        // TODO: handle AI cars
+        this.handleAiCars();
         this.redrawScreenMessages();
     }
 }

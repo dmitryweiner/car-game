@@ -1,6 +1,6 @@
 import SimpleObject from './object.mjs';
 import * as constants from '../constants.mjs';
-import {isConsole} from "../utils";
+import {isConsole} from '../utils.mjs';
 
 export default class MovingObject extends SimpleObject {
 
@@ -10,12 +10,13 @@ export default class MovingObject extends SimpleObject {
         this.speed = 0;
         this.maxX = this.gameField.clientWidth;
         this.maxY = this.gameField.clientHeight;
+        this.directionShift = 0;
     }
 
     doTurn() {
 
-        this.vx = this.speed * Math.cos(this.direction) * constants.STEP;
-        this.vy = this.speed * Math.sin(this.direction) * constants.STEP;
+        this.vx = this.speed * Math.cos(this.direction + this.directionShift) * constants.STEP;
+        this.vy = this.speed * Math.sin(this.direction + this.directionShift) * constants.STEP;
 
         this.x += this.vx;
         this.y += this.vy;
