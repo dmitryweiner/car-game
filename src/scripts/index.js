@@ -2,17 +2,33 @@ import '../styles/index.scss';
 import Game from './models/game.mjs';
 import { gameTick } from './utils.mjs';
 import * as constants from './constants.mjs';
+import { mutate } from './neataptic-utils.mjs';
+import population from './population.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new Game(document.getElementById('gameField'));
+    const field = document.getElementById('gameField');
+    let game = new Game(field, true, population.map((brain) => neataptic.Network.fromJSON(brain)));
 
     gameTick(() => {
-        game.tick();
+        //
+        // game.tick();
+        //
+        
+        // TODO: delete this
+        if (game.aiCars.length > 0) {
+            if (game.bonuses.length < game.aiCars.length * constants.BONUS_RATE_COEFFICIENT) {
+                game.addBonus();
+            }
+            game.tick();
+        } else { // else mutate
+            const mutatedPopulation = mutate(game.neat).population; // TODO: bad!
+            game = new Game(field, true, mutatedPopulation);
+        }
     }, constants.FPS);
 
-    setInterval(() => {
+    /*setInterval(() => {
         game.addBonus();
-    }, constants.BONUS_DELAY);
+    }, constants.BONUS_DELAY);*/
 
     document.addEventListener('keydown', (e) => {
         // TODO: rewrite https://learn.javascript.ru/keyboard-events

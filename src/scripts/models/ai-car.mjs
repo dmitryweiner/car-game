@@ -11,11 +11,13 @@ export default class AiCar extends Car {
         this.y = Math.random() * (this.maxY - AiCar.SIZE);
         this.ttl = constants.MAX_TTL;
         this.directionShift = Math.random() * 2 * Math.PI;
+        this.randomDirectionFlip = Math.random() > 0.5;
     }
 
     seeBonuses(bonuses) {
         const nearestBonuses = getVisibleObjects(this.x, this.y, bonuses);
-        let activationResult = this.brain.activate([...normalize(nearestBonuses)]);
+        //let activationResult = this.brain.activate([...normalize(nearestBonuses)]);
+        let activationResult = this.brain.activate(nearestBonuses);
         //console.log(activationResult);
         activationResult = sigmoidize(activationResult);
         //console.log(activationResult);
@@ -28,14 +30,14 @@ export default class AiCar extends Car {
         };
         if (activationResult[0] > constants.ACTIVATION_THRESHOLD) {
             controls.accelerator = true;
-        } else if (activationResult[1] > constants.ACTIVATION_THRESHOLD) {
+        } else {
             controls.brakes = true;
         }
 
-        if (activationResult[2] > constants.ACTIVATION_THRESHOLD) {
-            controls.left = true;
-        } else if (activationResult[3] > constants.ACTIVATION_THRESHOLD) {
-            controls.right = true;
+        if (activationResult[1] > constants.ACTIVATION_THRESHOLD) {
+            controls.left = this.randomDirectionFlip;
+        } else {
+            controls.right = !this.randomDirectionFlip;
         }
         this.handleControls(controls);
     }

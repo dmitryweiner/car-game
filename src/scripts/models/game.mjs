@@ -154,6 +154,7 @@ export default class Game {
         });
     }
 
+    // TODO: move this to main
     redrawScreenMessages() {
         if (isConsole()) return;
 
