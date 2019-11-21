@@ -44,8 +44,6 @@ function savePopulation(population) {
     fs.writeFile('src/scripts/population.mjs', json, 'utf8', (err, data) => {
         if (err) {
             console.log('Error writing file: ', err);
-        } else {
-            console.log('Population saved');
         }
     });
 }

@@ -1,5 +1,5 @@
 import Car from './car.mjs';
-import { angleToPoint, distance, sigmoidize } from '../utils.mjs';
+import { angleToPoint, distance, sigmoidize, normalize } from '../utils.mjs';
 import * as constants from '../constants.mjs';
 
 export default class AiCar extends Car {
@@ -15,7 +15,11 @@ export default class AiCar extends Car {
 
     seeBonuses(bonuses) {
         const nearestBonuses = getVisibleObjects(this.x, this.y, bonuses);
-        const activationResult = sigmoidize(this.brain.activate([...sigmoidize(nearestBonuses)]));
+        let activationResult = this.brain.activate([...normalize(nearestBonuses)]);
+        //console.log(activationResult);
+        activationResult = sigmoidize(activationResult);
+        //console.log(activationResult);
+
         const controls = {
             accelerator: false,
             brakes: false,
@@ -26,7 +30,9 @@ export default class AiCar extends Car {
             controls.accelerator = true;
         } else if (activationResult[1] > constants.ACTIVATION_THRESHOLD) {
             controls.brakes = true;
-        } else if (activationResult[2] > constants.ACTIVATION_THRESHOLD) {
+        }
+
+        if (activationResult[2] > constants.ACTIVATION_THRESHOLD) {
             controls.left = true;
         } else if (activationResult[3] > constants.ACTIVATION_THRESHOLD) {
             controls.right = true;

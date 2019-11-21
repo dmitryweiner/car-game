@@ -6,6 +6,7 @@ class Car extends MovingObject{
 
     constructor(x, y, gameField) {
         super(x, y, gameField);
+        this.size = Car.SIZE;
 
         if (isConsole()) return;
         const element = document.getElementById(this.id);

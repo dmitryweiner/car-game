@@ -5,6 +5,7 @@ import { getRandomColor, isConsole } from '../utils.mjs';
 class Bonus extends SimpleObject {
     constructor(x, y, gameField) {
         super(x, y, gameField);
+        this.size = Bonus.SIZE;
         this.color = getRandomColor();
         this.ttl = Math.random() * (constants.MAX_BONUS_TTL - constants.MIM_BONUS_TTL) + constants.MIM_BONUS_TTL; // time to live in ms
 
