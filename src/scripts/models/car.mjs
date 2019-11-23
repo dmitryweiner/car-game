@@ -9,8 +9,7 @@ class Car extends MovingObject{
         this.size = Car.SIZE;
 
         if (isConsole()) return;
-        const element = document.getElementById(this.id);
-        element.setAttribute('class', 'car');
+        this.element.setAttribute('class', 'car');
     }
 
     handleControls({accelerator, brakes, right, left}) {

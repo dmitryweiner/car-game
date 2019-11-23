@@ -20,6 +20,10 @@ body {
     z-index: 0;
 }
 
+.ai-car {
+    filter: hue-rotate(90deg);
+}
+
 .bonus {
     position: absolute;
     height: 30px;

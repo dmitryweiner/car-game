@@ -1,6 +1,7 @@
 import Car from './car.mjs';
 import { angleToPoint, distance, sigmoidize, normalize } from '../utils.mjs';
 import * as constants from '../constants.mjs';
+import { isConsole } from '../utils.mjs';
 
 export default class AiCar extends Car {
 
@@ -11,7 +12,9 @@ export default class AiCar extends Car {
         this.y = Math.random() * (this.maxY - AiCar.SIZE);
         this.ttl = constants.MAX_TTL;
         this.directionShift = Math.random() * 2 * Math.PI;
-        this.randomDirectionFlip = Math.random() > 0.5;
+
+        if (isConsole()) return;
+        this.element.setAttribute('class', 'car ai-car');
     }
 
     seeBonuses(bonuses) {
@@ -22,24 +25,21 @@ export default class AiCar extends Car {
         activationResult = sigmoidize(activationResult);
         //console.log(activationResult);
 
-        const controls = {
-            accelerator: false,
-            brakes: false,
-            left: false,
-            right: false,
-        };
-        if (activationResult[0] > constants.ACTIVATION_THRESHOLD) {
-            controls.accelerator = true;
-        } else {
-            controls.brakes = true;
+        this.speed = activationResult[0] * constants.V_MAX;
+        if (this.speed < 0) {
+            this.speed = 0;
+        }
+        if (this.speed > constants.V_MAX) {
+            this.speed = constants.V_MAX;
         }
 
-        if (activationResult[1] > constants.ACTIVATION_THRESHOLD) {
-            controls.left = this.randomDirectionFlip;
-        } else {
-            controls.right = !this.randomDirectionFlip;
+        this.direction += (constants.ACTIVATION_THRESHOLD - activationResult[1]) / 10;
+        if (this.direction < 0) {
+            this.direction = 2 * Math.PI + this.direction;
         }
-        this.handleControls(controls);
+        if (this.direction > 2 * Math.PI) {
+            this.direction = this.direction - 2 * Math.PI;
+        }
     }
 
     doTurn() {
@@ -53,7 +53,6 @@ export default class AiCar extends Car {
  * @param {number} x
  * @param {number} y
  * @param {[]} objects
- * @param {number} seekingDistance
  * @return {array} [0, 0, 20, 0 ... ]
  */
 function getVisibleObjects(x, y, objects) {
