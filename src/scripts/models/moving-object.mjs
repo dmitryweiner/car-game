@@ -14,6 +14,9 @@ export default class MovingObject extends SimpleObject {
     }
 
     doTurn() {
+        const oldX = this.x;
+        const oldY = this.y;
+
 
         this.vx = this.speed * Math.cos(this.direction + this.directionShift) * constants.STEP;
         this.vy = this.speed * Math.sin(this.direction + this.directionShift) * constants.STEP;
@@ -23,23 +26,27 @@ export default class MovingObject extends SimpleObject {
 
         //check borders
         if (this.x < 0) {
-            this.x = this.maxX - this.size;
-            //this.x = 0;
+            //this.x = this.maxX - this.size;
+            this.x = 0;
+            this.y = oldY;
         }
 
         if (this.y < 0) {
-            this.y = this.maxY - this.size;
-            //this.y = 0;
+            //this.y = this.maxY - this.size;
+            this.y = 0;
+            this.x = oldX;
         }
 
         if (this.x > (this.maxX - this.size)) {
-            this.x = 0;
-            //this.x = this.maxX - this.size;
+            //this.x = 0;
+            this.x = this.maxX - this.size;
+            this.y = oldY;
         }
 
         if (this.y > (this.maxY - this.size)) {
-            this.y = 0;
-            //this.y = this.maxY - this.size;
+            //this.y = 0;
+            this.y = this.maxY - this.size;
+            this.x = oldX;
         }
     }
 
