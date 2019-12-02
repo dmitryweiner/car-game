@@ -2,15 +2,15 @@ export const V_DECR = 0.05; // decrement of the velocity with time
 export const V_ACC = 0.2; // increment of the velocity with pressing accelerator
 export const V_BRAKE_DECR = 0.3; // decrement of brakes
 export const V_MAX = 3.0;
-export const DELTA_ANGLE = 0.05;
+export const DELTA_ANGLE = 0.1;
 export const STEP = 3; // max pixels per turn
 export const DELAY = 50;
 export const FPS = 1000 / DELAY;
 
 export const BONUS_DELAY = 1000;
-export const BONUS_RATE_COEFFICIENT = 1.0;
-export const MAX_TTL = 7000;
-export const BONUS_TTL_REWARD = MAX_TTL * 1.5;
+export const BONUS_RATE_COEFFICIENT = 0.9;
+export const MAX_TTL = 6500;
+export const BONUS_TTL_REWARD = MAX_TTL * 0.9;
 export const MAX_BONUS_TTL = MAX_TTL;
 export const MIM_BONUS_TTL = MAX_BONUS_TTL;
 

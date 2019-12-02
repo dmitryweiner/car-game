@@ -14,7 +14,6 @@ export default class Game {
         this.maxY = gameField.clientHeight;
         this.userScore = 0;
         this.aiScore = 0;
-        this.collision = isConsole() ? null : new Audio('public/sounds/collision.mp3');
         this.bonuses = [];
         this.userCar = null;
         this.aiCars = [];
@@ -24,6 +23,9 @@ export default class Game {
             left: false,
             right: false,
         };
+        this.onUserScoreChangeHandler = () => {};
+        this.onAiScoreChangeHandler = () => {};
+
 
         this.neat = createNeatapticObject();
         if (isTraining) {
@@ -105,8 +107,9 @@ export default class Game {
 
             //handle collision
             if (this.userCar && distance(this.bonuses[i].x, this.bonuses[i].y, this.userCar.x, this.userCar.y) < (Bonus.SIZE + Car.SIZE) / 2) {
-                if (!isConsole()) this.collision.play();
+                this.userCar.playBonusCollisionSound();
                 this.userScore++;
+                this.onUserScoreChangeHandler(this.userScore);
                 this.bonuses[i].delete();
                 continue;
             }
@@ -115,8 +118,9 @@ export default class Game {
                 return distance(this.bonuses[i].x, this.bonuses[i].y, aiCar.x, aiCar.y) < (Bonus.SIZE + Car.SIZE) / 2;
             });
             if (aiCarFoundBonus) {
-                // TODO: count ai score somehow
+                aiCarFoundBonus.playBonusCollisionSound();
                 aiCarFoundBonus.brain.score += constants.BONUS_REWARD;
+                this.onAiScoreChangeHandler(this.aiCars.map((car) => car.brain.score));
                 aiCarFoundBonus.ttl += constants.BONUS_TTL_REWARD;
                 this.bonuses[i].delete();
                 continue;
@@ -154,18 +158,17 @@ export default class Game {
         });
     }
 
-    // TODO: move this to main
-    redrawScreenMessages() {
-        if (isConsole()) return;
+    onUserScoreChange(handler) {
+        this.onUserScoreChangeHandler = handler;
+    }
 
-        document.getElementById('userScore').innerText = this.userScore;
-        document.getElementById('aiScore').innerText = this.aiScore;
+    onAiScoreChange(handler) {
+        this.onAiScoreChangeHandler = handler;
     }
 
     tick() {
         this.handleBonuses();
         this.handleUserCar();
         this.handleAiCars();
-        this.redrawScreenMessages();
     }
 }

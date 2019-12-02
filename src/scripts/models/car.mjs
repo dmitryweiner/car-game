@@ -10,6 +10,7 @@ class Car extends MovingObject{
 
         if (isConsole()) return;
         this.element.setAttribute('class', 'car');
+        this.bonusSound = new Audio('public/sounds/collision.mp3');
     }
 
     handleControls({accelerator, brakes, right, left}) {
@@ -44,6 +45,11 @@ class Car extends MovingObject{
         if (this.speed < 0) {
             this.speed = 0;
         }
+    }
+
+    playBonusCollisionSound() {
+        if (isConsole()) return;
+        this.bonusSound.play();
     }
 }
 

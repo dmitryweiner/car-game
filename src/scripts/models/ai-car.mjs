@@ -2,6 +2,7 @@ import Car from './car.mjs';
 import { angleToPoint, distance, sigmoidize, normalize } from '../utils.mjs';
 import * as constants from '../constants.mjs';
 import { isConsole } from '../utils.mjs';
+import {cloneNode} from '../neataptic-utils.mjs';
 
 export default class AiCar extends Car {
 
@@ -15,6 +16,10 @@ export default class AiCar extends Car {
 
         if (isConsole()) return;
         this.element.setAttribute('class', 'car ai-car');
+        this.element.addEventListener('click', () => {
+            console.log(this);
+        });
+        this.bonusSound = new Audio('public/sounds/ai-bonus-collision.mp3');
     }
 
     seeBonuses(bonuses) {
@@ -24,6 +29,17 @@ export default class AiCar extends Car {
         //console.log(activationResult);
         activationResult = sigmoidize(activationResult);
         //console.log(activationResult);
+
+        /**
+         * For some strange reason neural network could return NaN
+         * probably due to glitch in neataptic.js
+         */
+        if (isNaN(activationResult[1])) {
+            const score = this.brain.score;
+            this.brain = cloneNode(this.brain);
+            this.brain.score = score;
+            return;
+        }
 
         this.speed = activationResult[0] * constants.V_MAX;
         if (this.speed < 0) {
