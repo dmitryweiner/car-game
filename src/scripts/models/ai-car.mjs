@@ -11,14 +11,14 @@ export default class AiCar extends Car {
         this.x = Math.random() * (this.maxX - AiCar.SIZE);
         this.y = Math.random() * (this.maxY - AiCar.SIZE);
         this.ttl = constants.MAX_TTL;
-        this.directionShift = Math.random() * 2 * Math.PI;
+        this.direction = Math.random() * 2 * Math.PI;
 
         if (isConsole()) return;
         this.element.setAttribute('class', 'car ai-car');
     }
 
     seeBonuses(bonuses) {
-        const nearestBonuses = getVisibleObjects(this.x, this.y, bonuses);
+        const nearestBonuses = getVisibleObjects(this.direction, this.x, this.y, bonuses);
         //let activationResult = this.brain.activate([...normalize(nearestBonuses)]);
         let activationResult = this.brain.activate(nearestBonuses);
         //console.log(activationResult);
@@ -33,7 +33,7 @@ export default class AiCar extends Car {
             this.speed = constants.V_MAX;
         }
 
-        this.direction += (constants.ACTIVATION_THRESHOLD - activationResult[1]) / 10;
+        this.direction += (constants.ACTIVATION_THRESHOLD - activationResult[1]) / 3; // TODO: constants
         if (this.direction < 0) {
             this.direction = 2 * Math.PI + this.direction;
         }
@@ -50,12 +50,13 @@ export default class AiCar extends Car {
 
 /**
  *
+ * @param {number} direction angle of view
  * @param {number} x
  * @param {number} y
  * @param {[]} objects
  * @return {array} [0, 0, 20, 0 ... ]
  */
-function getVisibleObjects(x, y, objects) {
+function getVisibleObjects(direction, x, y, objects) {
     const result = [];
     const nearest = [];
 
@@ -68,8 +69,8 @@ function getVisibleObjects(x, y, objects) {
     for (let i = 0; i < constants.SECTORS_OF_VISION; i++) {
         let angleBegin, angleEnd;
         result[i] = 0;
-        angleBegin = i * 2 * Math.PI / constants.SECTORS_OF_VISION;
-        angleEnd = (i + 1) * 2 * Math.PI / constants.SECTORS_OF_VISION;
+        angleBegin = direction + i * 2 * Math.PI / constants.SECTORS_OF_VISION;
+        angleEnd = direction + (i + 1) * 2 * Math.PI / constants.SECTORS_OF_VISION;
         for (const item of nearest) {
             const angle = angleToPoint(x, y, item.x, item.y);
             const distanceToObj = distance(x, y, item.x, item.y);

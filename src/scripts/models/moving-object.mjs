@@ -10,7 +10,6 @@ export default class MovingObject extends SimpleObject {
         this.speed = 0;
         this.maxX = this.gameField.clientWidth;
         this.maxY = this.gameField.clientHeight;
-        this.directionShift = 0;
     }
 
     doTurn() {
@@ -18,8 +17,8 @@ export default class MovingObject extends SimpleObject {
         const oldY = this.y;
 
 
-        this.vx = this.speed * Math.cos(this.direction + this.directionShift) * constants.STEP;
-        this.vy = this.speed * Math.sin(this.direction + this.directionShift) * constants.STEP;
+        this.vx = this.speed * Math.cos(this.direction) * constants.STEP;
+        this.vy = this.speed * Math.sin(this.direction) * constants.STEP;
 
         this.x += this.vx;
         this.y += this.vy;
@@ -54,6 +53,6 @@ export default class MovingObject extends SimpleObject {
         super.redraw();
 
         if (isConsole()) return;
-        this.element.style.transform = 'rotate(' + (this.direction + this.directionShift + Math.PI / 2) + 'rad)';
+        this.element.style.transform = 'rotate(' + (this.direction + Math.PI / 2) + 'rad)';
     }
 }

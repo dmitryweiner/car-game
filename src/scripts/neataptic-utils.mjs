@@ -17,7 +17,8 @@ export function mutate(neat) {
 
     // genotypes with highest scores will reproduce
     console.log(neat.population.map((brain) => brain.score));
-    for (let i = 0; i < neat.elitism; i++) {
+    const maxIndex = neat.population.length > neat.elitism ? neat.elitism : neat.population.length;
+    for (let i = 0; i < maxIndex; i++) {
         const offsprings = neat.population[i].score > (max - (max - avg) / constants.OVERHEAD)
             ? constants.SCORE_REPRODUCTION_COEFFICIENT
             : 1;

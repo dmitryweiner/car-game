@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             game.tick();
         } else { // else mutate
             const mutatedPopulation = mutate(game.neat).population; // TODO: bad!
-            game = new Game(field, true, mutatedPopulation);
+            game = new Game(field, false, mutatedPopulation);
         }
     }, constants.FPS);
 

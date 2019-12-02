@@ -1,7 +1,7 @@
 {
-  "name": "webpack-starter",
-  "version": "1.0.0",
-  "description": "A light foundation for your next frontend project based on webpack.",
+  "name": "car-game",
+  "version": "1.1.0",
+  "description": "2D Online car simulator with AI.",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack/webpack.config.prod.js  --colors",
     "start": "webpack-dev-server --open --config webpack/webpack.config.dev.js",
@@ -12,17 +12,15 @@
     "url": "git+https://github.com/wbkd/webpack-starter.git"
   },
   "keywords": [
-    "webpack",
-    "startkit",
-    "frontend",
     "es6",
     "javascript",
-    "webdev"
+    "neataptic",
+    "neural"
   ],
   "author": "webkid.io",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wbkd/webpack-starter/issues"
+    "url": "https://github.com/dmitryweiner/car-game/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
