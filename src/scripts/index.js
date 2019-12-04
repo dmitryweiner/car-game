@@ -6,6 +6,8 @@ import population from './population.mjs';
 import { BUTTON_RIGHT, BUTTON_LEFT, BUTTON_UP, BUTTON_DOWN } from './models/game.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
+    openFullscreen();
+
     const field = document.getElementById('gameField');
     //let game = new Game(field, true, population.map((brain) => neataptic.Network.fromJSON(brain)));
     let game = new Game(field, false, population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB).map((brain) => neataptic.Network.fromJSON(brain)));
@@ -83,5 +85,18 @@ document.addEventListener('DOMContentLoaded', () => {
         element.addEventListener('touchcancel', (e) => {
             game.handleKeyUp(button);
         });
+    }
+
+    function openFullscreen() {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
     }
 });

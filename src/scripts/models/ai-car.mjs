@@ -20,6 +20,7 @@ export default class AiCar extends Car {
             console.log(this);
         });
         this.bonusSound = new Audio('public/sounds/ai-bonus-collision.mp3');
+        this.bonusSound.volume = 0.2;
     }
 
     seeBonuses(bonuses) {
