@@ -13,6 +13,7 @@ class Bonus extends SimpleObject {
 
         this.element.setAttribute('class', 'bonus');
         this.element.style.backgroundColor = this.color;
+        this.element.innerText = this.getTtlText();
     }
 
     redraw() {
@@ -23,8 +24,12 @@ class Bonus extends SimpleObject {
         this.element.style.opacity = '' + this.ttl / constants.MAX_BONUS_TTL;
 
         // display seconds
-        this.element.innerText = Math.round(this.ttl / 1000);
+        this.element.innerText = this.getTtlText();
 
+    }
+
+    getTtlText() {
+        return  '' + Math.round(this.ttl / 1000);
     }
 }
 

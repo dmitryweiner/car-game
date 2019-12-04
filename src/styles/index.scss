@@ -5,6 +5,14 @@ body {
     overflow-y: hidden;
 }
 
+* {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    user-select: none;
+}
+
 #gameField {
     background-color: #adadad;
     position: absolute;
@@ -59,33 +67,39 @@ body {
 @media only screen and (max-width : 800px){
     .control {
         display: block;
-        background-color: red;
+        background-color: white;
+        color: black;
         position: absolute;
-        width: 30%;
-        height: 30%;
+        width: 80px;
+        height: 80px;
         z-index: 2;
         margin: 0;
         padding: 0;
-        opacity: 0.1;
+        opacity: 0.3;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 80px;
+        border: 1px solid black;
+        border-radius: 5px;
     }
 
     .left.control {
-        top: 66%;
-        left: 3%;
+        right: 120px;
+        bottom: 20px;
     }
 
     .right.control {
-        top: 66%;
-        left: 66%;
+        right: 20px;
+        bottom: 20px;
     }
 
     .up.control {
-        top: 33%;
-        left: 34.5%;
+        left: 20px;
+        bottom: 120px;
     }
 
     .down.control {
-        top: 66%;
-        left: 34.5%;
+        left: 20px;
+        bottom: 20px;
     }
 }

@@ -2,9 +2,8 @@ import '../styles/index.scss';
 import Game from './models/game.mjs';
 import { gameTick } from './utils.mjs';
 import * as constants from './constants.mjs';
-import { mutate } from './neataptic-utils.mjs';
 import population from './population.mjs';
-import {isConsole} from "./utils";
+import { BUTTON_RIGHT, BUTTON_LEFT, BUTTON_UP, BUTTON_DOWN } from './models/game.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
     const field = document.getElementById('gameField');
@@ -20,19 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gameTick(() => {
-        //
-        // game.tick();
-        //
-        
-        if (game.bonuses.length < (game.aiCars.length + 1) * constants.BONUS_RATE_COEFFICIENT) {
-            game.addBonus();
+        if (game.aiCars.length > 0) {
+            if (game.bonuses.length < (game.aiCars.length + 1) * constants.BONUS_RATE_COEFFICIENT) {
+                game.addBonus();
+            }
+            game.tick();
+        } else {
+            game.restart();
         }
-        game.tick();
     }, constants.FPS);
 
-    /*setInterval(() => {
-        game.addBonus();
-    }, constants.BONUS_DELAY);*/
+    /**
+     * Disable zoom
+     */
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+
+    /**
+     * Reload on screen resize
+     */
+    window.addEventListener('orientationchange', function (e) {
+        document.location.reload();
+    });
+
 
     document.addEventListener('keydown', (e) => {
         // TODO: rewrite https://learn.javascript.ru/keyboard-events
@@ -56,9 +66,22 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     });
 
-    // TODO: move this to main
-    function redrawScreenMessages(userScore, aiScore) {
-        document.getElementById('userScore').innerText = userScore;
-        document.getElementById('aiScore').innerText = aiScore;
+    addListeners(document.getElementById('right'), BUTTON_RIGHT);
+    addListeners(document.getElementById('left'), BUTTON_LEFT);
+    addListeners(document.getElementById('up'), BUTTON_UP);
+    addListeners(document.getElementById('down'), BUTTON_DOWN);
+
+    function addListeners(element, button) {
+        element.addEventListener('touchstart', (e) => {
+            game.handleKeyDown(button);
+        });
+
+        element.addEventListener('touchend', (e) => {
+            game.handleKeyUp(button);
+        });
+
+        element.addEventListener('touchcancel', (e) => {
+            game.handleKeyUp(button);
+        });
     }
 });

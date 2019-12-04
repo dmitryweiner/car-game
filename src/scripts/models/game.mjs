@@ -5,6 +5,12 @@ import * as constants from '../constants.mjs';
 import { distance, isConsole } from '../utils.mjs';
 import { createNeatapticObject } from '../neataptic-utils.mjs';
 import population from '../population.mjs';
+import { mutate } from '../neataptic-utils.mjs';
+
+export const BUTTON_LEFT = 37;
+export const BUTTON_RIGHT = 39;
+export const BUTTON_UP = 38;
+export const BUTTON_DOWN = 40;
 
 export default class Game {
 
@@ -62,19 +68,19 @@ export default class Game {
     
     handleKeyDown(code) {
         switch (code) {
-            case 37: // left
+            case BUTTON_LEFT: // left
                 this.buttonsPressed.left = true;
                 break;
 
-            case 38: // up
+            case BUTTON_UP: // up
                 this.buttonsPressed.accelerator = true;
                 break;
 
-            case 39: // right
+            case BUTTON_RIGHT: // right
                 this.buttonsPressed.right = true;
                 break;
 
-            case 40: // down
+            case BUTTON_DOWN: // down
                 this.buttonsPressed.brakes = true;
                 break;
         }
@@ -82,19 +88,19 @@ export default class Game {
 
     handleKeyUp(code) {
         switch (code) {
-            case 37: // left
+            case BUTTON_LEFT: // left
                 this.buttonsPressed.left = false;
                 break;
 
-            case 38: // up
+            case BUTTON_UP: // up
                 this.buttonsPressed.accelerator = false;
                 break;
 
-            case 39: // right
+            case BUTTON_RIGHT: // right
                 this.buttonsPressed.right = false;
                 break;
 
-            case 40: // down
+            case BUTTON_DOWN: // down
                 this.buttonsPressed.brakes = false;
                 break;
         }
@@ -170,5 +176,18 @@ export default class Game {
         this.handleBonuses();
         this.handleUserCar();
         this.handleAiCars();
+    }
+
+    restart() {
+        this.aiCars.map((aiCar) => aiCar.delete());
+        this.aiCars = [];
+
+        this.neat = mutate(this.neat);
+        this.neat.population.map((brain) => {
+            brain.score = 0;
+            this.aiCars.push(
+                new AiCar(null, null, this.gameField, brain)
+            );
+        });
     }
 }
