@@ -7,6 +7,7 @@ class Car extends MovingObject{
     constructor(x, y, gameField) {
         super(x, y, gameField);
         this.size = Car.SIZE;
+        this.score = 0;
 
         if (isConsole()) return;
         this.element.setAttribute('class', 'car');

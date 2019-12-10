@@ -12,17 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     //let game = new Game(field, true, population.map((brain) => neataptic.Network.fromJSON(brain)));
     let game = new Game(field, false, population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB).map((brain) => neataptic.Network.fromJSON(brain)));
 
-    game.onUserScoreChange((newScore) => {
-        document.getElementById('userScore').innerText = newScore;
+    game.onUserScoreChange((userScore) => {
+        document.getElementById('userScore').innerText = '' + userScore;
     });
 
-    game.onAiScoreChange((aiScores) => {
-        document.getElementById('aiScore').innerText = '' + Math.max(...aiScores) / constants.BONUS_REWARD;
+    game.onAiScoreChange((aiScore) => {
+        document.getElementById('aiScore').innerText = '' + aiScore;
     });
 
     gameTick(() => {
-        if (game.aiCars.length > 0) {
-            if (game.bonuses.length < (game.aiCars.length + 1) * constants.BONUS_RATE_COEFFICIENT) {
+        if (game.cars.length > 1) {
+            if (game.bonuses.length < (game.cars.length + 1) * constants.BONUS_RATE_COEFFICIENT) {
                 game.addBonus();
             }
             game.tick();

@@ -19,8 +19,8 @@ let generation = 0;
 
 setInterval(() => {
     // if not all died do run
-    if (trainingGame.aiCars.length > 0) {
-        if (trainingGame.bonuses.length < trainingGame.aiCars.length * constants.BONUS_RATE_COEFFICIENT) {
+    if (trainingGame.cars.length > 0) {
+        if (trainingGame.bonuses.length < trainingGame.cars.length * constants.BONUS_RATE_COEFFICIENT) {
             trainingGame.addBonus();
         }
         trainingGame.tick();
