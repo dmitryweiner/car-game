@@ -8,7 +8,6 @@ class SimpleObject {
         this.x = x;
         this.y = y;
         this.size = SimpleObject.SIZE;
-        this.needDelete = false;
 
         if (isConsole()) return;
 

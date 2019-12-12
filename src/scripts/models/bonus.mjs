@@ -1,9 +1,21 @@
 import SimpleObject from './object.mjs';
 import * as constants from '../constants.mjs';
 import { getRandomColor, isConsole } from '../utils.mjs';
+import { checkIntersection } from '../utils.mjs';
 
 class Bonus extends SimpleObject {
-    constructor(x, y, gameField) {
+    constructor(gameField, obstacles) {
+        let x, y;
+        let isIntersected;
+
+        do {
+            x = Math.random() * (gameField.clientWidth - Bonus.SIZE);
+            y = Math.random() * (gameField.clientHeight - Bonus.SIZE);
+            isIntersected = obstacles.some((obstacle) => checkIntersection(
+                obstacle.x, obstacle.y, obstacle.width, obstacle.height,
+                x, y, Bonus.SIZE, Bonus.SIZE));
+        } while (isIntersected);
+
         super(x, y, gameField);
         this.size = Bonus.SIZE;
         this.color = getRandomColor();

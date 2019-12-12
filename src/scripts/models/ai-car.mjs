@@ -2,15 +2,15 @@ import Car from './car.mjs';
 import { angleToPoint, distance, sigmoidize, normalize } from '../utils.mjs';
 import * as constants from '../constants.mjs';
 import { isConsole } from '../utils.mjs';
-import {cloneNode} from '../neataptic-utils.mjs';
+import { cloneNode } from '../neataptic-utils.mjs';
 
 export default class AiCar extends Car {
 
-    constructor(x, y, gameField, brain) {
+    constructor(gameField, brain) {
+        const x = Math.random() * (gameField.clientWidth - AiCar.SIZE);
+        const y = Math.random() * (gameField.clientHeight - AiCar.SIZE);
         super(x, y, gameField);
         this.brain = brain;
-        this.x = Math.random() * (this.maxX - AiCar.SIZE);
-        this.y = Math.random() * (this.maxY - AiCar.SIZE);
         this.ttl = constants.MAX_TTL;
         this.direction = Math.random() * 2 * Math.PI;
 
@@ -23,13 +23,15 @@ export default class AiCar extends Car {
         this.bonusSound.volume = 0.2;
     }
 
-    seeBonuses(bonuses) {
-        const nearestBonuses = getVisibleObjects(this.direction, this.x, this.y, bonuses);
-        //let activationResult = this.brain.activate([...normalize(nearestBonuses)]);
-        let activationResult = this.brain.activate(nearestBonuses);
-        //console.log(activationResult);
+    seeWorld(bonuses, objects) {
+        const nearestBonuses = normalize(getVisibleObjects(this.direction, this.x, this.y, bonuses));
+
+        objects = objects.filter((object) => object.id !== this.id);
+        let nearestObjects = getVisibleObjects(this.direction, this.x, this.y, objects);
+            //.map((l) => Math.exp(-l));
+        nearestObjects = normalize(nearestObjects);
+        let activationResult = this.brain.activate([...nearestBonuses, ...nearestObjects]);
         activationResult = sigmoidize(activationResult);
-        //console.log(activationResult);
 
         /**
          * For some strange reason neural network could return NaN
@@ -59,8 +61,12 @@ export default class AiCar extends Car {
         }
     }
 
-    doTurn() {
-        super.doTurn();
+    doTurn(objects) {
+        if (this.isCollided(objects)) {
+            this.brain.score -= constants.COLLISION_FINE;
+            this.ttl -= constants.DELAY * constants.COLLISION_TTL_REDUCTION_COEFFICIENT;
+        }
+        super.doTurn(objects);
         this.ttl -= constants.DELAY;
     }
 }

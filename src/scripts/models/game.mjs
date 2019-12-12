@@ -1,11 +1,13 @@
-import Car from './car.mjs';
-import AiCar from './ai-car.mjs';
-import Bonus from './bonus.mjs';
 import * as constants from '../constants.mjs';
 import { distance, isConsole } from '../utils.mjs';
 import { createNeatapticObject } from '../neataptic-utils.mjs';
-import population from '../population.mjs';
 import { mutate } from '../neataptic-utils.mjs';
+import population from '../population.mjs';
+
+import Car from './car.mjs';
+import AiCar from './ai-car.mjs';
+import Bonus from './bonus.mjs';
+import Obstacle from './obstacle.mjs';
 
 export const BUTTON_LEFT = 37;
 export const BUTTON_RIGHT = 39;
@@ -18,7 +20,6 @@ export default class Game {
         this.gameField = gameField;
         this.maxX = gameField.clientWidth;
         this.maxY = gameField.clientHeight;
-        this.userScore = 0;
         this.bonuses = [];
         this.cars = [];
         this.obstacles = [];
@@ -50,16 +51,19 @@ export default class Game {
         this.neat.population.map((brain) => {
             brain.score = 0;
             this.cars.push(
-                new AiCar(null, null, this.gameField, brain)
+                new AiCar(this.gameField, brain)
             );
         });
+
+        for (let i = 0; i < constants.OBSTACLES_COUNT; i++) {
+            this.obstacles.push(new Obstacle(this.gameField, [...this.cars, ...this.obstacles]));
+        }
     }
 
     addBonus() {
         const bonus = new Bonus(
-            (this.maxX - Bonus.SIZE) * Math.random(),
-            (this.maxY - Bonus.SIZE) * Math.random(),
-            this.gameField
+            this.gameField,
+            this.obstacles
         );
 
         this.bonuses.push(bonus);
@@ -120,9 +124,9 @@ export default class Game {
                     this.onAiScoreChangeHandler(this.getMaxAiCarsScore());
                     carFoundBonus.ttl += constants.BONUS_TTL_REWARD;
                 } else {
-                    carFoundBonus.score++;
                     this.onUserScoreChangeHandler(carFoundBonus.score);
                 }
+                carFoundBonus.score++;
                 this.bonuses[i].delete();
                 continue;
             }
@@ -140,10 +144,8 @@ export default class Game {
 
     handleCars() {
         this.cars = this.cars.filter((car) => {
-            car.doTurn();
-            car.redraw();
             if (car instanceof AiCar) {
-                car.seeBonuses(this.bonuses);
+                car.seeWorld(this.bonuses, [...this.cars, ...this.obstacles]);
                 if (car.ttl < 0) {
                     car.delete();
                     return false;
@@ -151,6 +153,8 @@ export default class Game {
             } else {
                 car.handleControls(this.buttonsPressed);
             }
+            car.doTurn([...this.cars, ...this.obstacles]);
+            car.redraw();
             return true;
         });
     }
@@ -181,7 +185,7 @@ export default class Game {
         this.neat.population.map((brain) => {
             brain.score = 0;
             this.cars.push(
-                new AiCar(null, null, this.gameField, brain)
+                new AiCar(this.gameField, brain)
             );
         });
     }
@@ -189,7 +193,7 @@ export default class Game {
     getMaxAiCarsScore() {
         const aiScores = this.cars
             .filter((car) => car instanceof AiCar)
-            .map((car) => car.brain.score);
-        return Math.max(...aiScores) / constants.BONUS_REWARD;
+            .map((car) => car.score);
+        return Math.max(...aiScores);
     }
 }

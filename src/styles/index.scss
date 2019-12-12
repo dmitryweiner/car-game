@@ -44,6 +44,14 @@ body {
     border-radius: 5px;
 }
 
+.obstacle {
+    position: absolute;
+    z-index: 0;
+    background-color: #8d8d8d;
+    border: 1px dotted white;
+    border-radius: 5px;
+}
+
 .userScore {
     position: absolute;
     right: 40px;

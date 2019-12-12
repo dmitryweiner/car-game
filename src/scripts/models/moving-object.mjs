@@ -1,6 +1,7 @@
 import SimpleObject from './object.mjs';
 import * as constants from '../constants.mjs';
-import {isConsole} from '../utils.mjs';
+import { isConsole } from '../utils.mjs';
+import { checkIntersection } from '../utils.mjs';
 
 export default class MovingObject extends SimpleObject {
 
@@ -12,7 +13,7 @@ export default class MovingObject extends SimpleObject {
         this.maxY = this.gameField.clientHeight;
     }
 
-    doTurn() {
+    doTurn(objects) {
         const oldX = this.x;
         const oldY = this.y;
 
@@ -47,6 +48,19 @@ export default class MovingObject extends SimpleObject {
             this.y = this.maxY - this.size;
             this.x = oldX;
         }
+
+        if (this.isCollided(objects)) {
+            this.x = oldX;
+            this.y = oldY;
+            this.speed = 0;
+        }
+
+    }
+
+    isCollided(objects) {
+        return objects
+            .some((object) => checkIntersection(this.x, this.y, this.width, this.height, object.x, object.y, object.width, object.height) && this.id !== object.id);
+
     }
 
     redraw() {

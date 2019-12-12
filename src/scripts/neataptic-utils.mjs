@@ -53,7 +53,7 @@ export function mutate(neat) {
 export function createNeatapticObject(popSize = null) {
     const realPopSize = popSize ? popSize : constants.POPULATION_SIZE;
     return new neataptic.Neat(
-        constants.SECTORS_OF_VISION, // inputs: sectors around
+        constants.SECTORS_OF_VISION * 2, // inputs: bonuses + obstacles (cars and walls)
         2, // output channels: accelerator/brakes, left/right
         null, // ranking function
         {

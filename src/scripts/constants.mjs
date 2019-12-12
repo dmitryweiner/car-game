@@ -7,10 +7,9 @@ export const STEP = 3; // max pixels per turn
 export const DELAY = 50;
 export const FPS = 1000 / DELAY;
 
-export const BONUS_DELAY = 1000;
-export const BONUS_RATE_COEFFICIENT = 0.9;
-export const MAX_TTL = 6500;
-export const BONUS_TTL_REWARD = MAX_TTL * 0.9;
+export const BONUS_RATE_COEFFICIENT = 0.8;
+export const MAX_TTL = 6900;
+export const BONUS_TTL_REWARD = MAX_TTL * 0.8;
 export const MAX_BONUS_TTL = MAX_TTL;
 export const MIM_BONUS_TTL = MAX_BONUS_TTL;
 
@@ -21,9 +20,15 @@ export const MUTATION_AMOUNT = 4;
 export const TRAINING_CELL_SIZE = 3000;
 export const MAX_SEEKING_DISTANCE = TRAINING_CELL_SIZE * 0.25;
 export const SECTORS_OF_VISION = 32;
-export const SCORE_REPRODUCTION_COEFFICIENT = 2; // offspring for highest score
+export const SCORE_REPRODUCTION_COEFFICIENT = 1; // offspring for highest score
 export const OVERHEAD = 2;
-export const BONUS_REWARD = 10;
+export const BONUS_REWARD = 100;
 export const NUMBER_OF_AI_CARS_IN_WEB = 3;
 export const ACTIVATION_THRESHOLD = 0.73;
+
+export const OBSTACLES_COUNT = 10;
+export const MIN_OBSTACLE_SIZE = 30;
+export const MAX_OBSTACLE_SIZE = 50;
+export const COLLISION_FINE = 10;
+export const COLLISION_TTL_REDUCTION_COEFFICIENT = 15;
 

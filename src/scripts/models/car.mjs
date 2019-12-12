@@ -7,6 +7,8 @@ class Car extends MovingObject{
     constructor(x, y, gameField) {
         super(x, y, gameField);
         this.size = Car.SIZE;
+        this.width = this.size;
+        this.height = this.size;
         this.score = 0;
 
         if (isConsole()) return;
@@ -40,12 +42,13 @@ class Car extends MovingObject{
         }
     }
 
-    doTurn() {
-        super.doTurn();
+    doTurn(objects) {
+        super.doTurn(objects);
         this.speed -= constants.V_DECR;
         if (this.speed < 0) {
             this.speed = 0;
         }
+
     }
 
     playBonusCollisionSound() {
