@@ -2,15 +2,17 @@ import '../styles/index.scss';
 import Game from './models/game.mjs';
 import { gameTick } from './utils.mjs';
 import * as constants from './constants.mjs';
-import population from './population.mjs';
+import population from './population-truncated.mjs';
 import { BUTTON_RIGHT, BUTTON_LEFT, BUTTON_UP, BUTTON_DOWN } from './models/game.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
-    openFullscreen();
 
     const field = document.getElementById('gameField');
-    //let game = new Game(field, true, population.map((brain) => neataptic.Network.fromJSON(brain)));
-    let game = new Game(field, false, population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB).map((brain) => neataptic.Network.fromJSON(brain)));
+    const truncatedPopulation = population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB).map((brain) => neataptic.Network.fromJSON(brain));
+    let game = new Game(field, false, truncatedPopulation);
+    const bonusRateCoefficient = document.body.clientWidth < constants.TRAINING_CELL_SIZE
+        ? constants.BONUS_RATE_COEFFICIENT
+        : Math.ceil(constants.BONUS_RATE_COEFFICIENT* (document.body.clientWidth / constants.TRAINING_CELL_SIZE));
 
     game.onUserScoreChange((userScore) => {
         document.getElementById('userScore').innerText = '' + userScore;
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gameTick(() => {
         if (game.cars.length > 1) {
-            if (game.bonuses.length < (game.cars.length + 1) * constants.BONUS_RATE_COEFFICIENT) {
+            if (game.bonuses.length < (game.cars.length + 1) * bonusRateCoefficient) {
                 game.addBonus();
             }
             game.tick();
@@ -87,16 +89,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function openFullscreen() {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) { /* Firefox */
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE/Edge */
-            elem.msRequestFullscreen();
-        }
-    }
 });

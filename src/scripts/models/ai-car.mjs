@@ -24,13 +24,13 @@ export default class AiCar extends Car {
     }
 
     seeWorld(bonuses, objects) {
-        const nearestBonuses = normalize(getVisibleObjects(this.direction, this.x, this.y, bonuses));
+        const xCenter = this.x + this.width / 2;
+        const yCenter = this.y + this.height / 2;
+        const nearestBonuses = getVisibleObjects(this.direction, xCenter, yCenter, bonuses);
 
         objects = objects.filter((object) => object.id !== this.id);
-        let nearestObjects = getVisibleObjects(this.direction, this.x, this.y, objects);
-            //.map((l) => Math.exp(-l));
-        nearestObjects = normalize(nearestObjects);
-        let activationResult = this.brain.activate([...nearestBonuses, ...nearestObjects]);
+        let nearestObjects = getVisibleObjects(this.direction, xCenter, yCenter, objects);
+        let activationResult = this.brain.activate([...nearestObjects, ...nearestBonuses]);
         activationResult = sigmoidize(activationResult);
 
         /**
@@ -62,9 +62,9 @@ export default class AiCar extends Car {
     }
 
     doTurn(objects) {
-        if (this.isCollided(objects)) {
+        if (this.collision) {
             this.brain.score -= constants.COLLISION_FINE;
-            this.ttl -= constants.DELAY * constants.COLLISION_TTL_REDUCTION_COEFFICIENT;
+            this.ttl -= constants.COLLISION_TTL_REDUCTION;
         }
         super.doTurn(objects);
         this.ttl -= constants.DELAY;
@@ -95,8 +95,10 @@ function getVisibleObjects(direction, x, y, objects) {
         angleBegin = direction + i * 2 * Math.PI / constants.SECTORS_OF_VISION;
         angleEnd = direction + (i + 1) * 2 * Math.PI / constants.SECTORS_OF_VISION;
         for (const item of nearest) {
-            const angle = angleToPoint(x, y, item.x, item.y);
-            const distanceToObj = distance(x, y, item.x, item.y);
+            const xCenter = item.x + item.width / 2;
+            const yCenter = item.y + item.height / 2;
+            const angle = angleToPoint(x, y, xCenter, yCenter);
+            const distanceToObj = distance(x, y, xCenter, yCenter);
             if (angle >= angleBegin && angle < angleEnd) {
                 if (result[i] < distanceToObj) {
                     result[i] = distanceToObj;

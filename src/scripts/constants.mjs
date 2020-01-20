@@ -8,7 +8,7 @@ export const DELAY = 50;
 export const FPS = 1000 / DELAY;
 
 export const BONUS_RATE_COEFFICIENT = 0.8;
-export const MAX_TTL = 6900;
+export const MAX_TTL = 7000;
 export const BONUS_TTL_REWARD = MAX_TTL * 0.8;
 export const MAX_BONUS_TTL = MAX_TTL;
 export const MIM_BONUS_TTL = MAX_BONUS_TTL;
@@ -26,9 +26,9 @@ export const BONUS_REWARD = 100;
 export const NUMBER_OF_AI_CARS_IN_WEB = 3;
 export const ACTIVATION_THRESHOLD = 0.73;
 
-export const OBSTACLES_COUNT = 10;
+export const OBSTACLES_COUNT = POPULATION_SIZE * 0.5;
 export const MIN_OBSTACLE_SIZE = 30;
-export const MAX_OBSTACLE_SIZE = 50;
-export const COLLISION_FINE = 10;
-export const COLLISION_TTL_REDUCTION_COEFFICIENT = 15;
+export const MAX_OBSTACLE_SIZE = 30;
+export const COLLISION_FINE = BONUS_REWARD * 0;
+export const COLLISION_TTL_REDUCTION = BONUS_TTL_REWARD * 0;
 

@@ -34,13 +34,11 @@ export default class Game {
 
 
         this.neat = createNeatapticObject();
-        if (isTraining) {
-            if (initialPopulation) {
-                this.neat.population = initialPopulation;
-            }
-        } else {
-            const truncatedPopulation = population.splice(0, constants.NUMBER_OF_AI_CARS_IN_WEB);
-            this.neat.population = truncatedPopulation.map((brain) => neataptic.Network.fromJSON(brain));
+        if (initialPopulation) {
+            this.neat.population = initialPopulation;
+        }
+        if (!isTraining) {
+            this.neat.population = initialPopulation;
             this.cars.push(new Car(
                 this.maxX / 2 - Car.SIZE / 2,
                 this.maxY / 2 - Car.SIZE / 2,

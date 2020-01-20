@@ -11,6 +11,7 @@ export default class MovingObject extends SimpleObject {
         this.speed = 0;
         this.maxX = this.gameField.clientWidth;
         this.maxY = this.gameField.clientHeight;
+        this.collision = false;
     }
 
     doTurn(objects) {
@@ -53,6 +54,9 @@ export default class MovingObject extends SimpleObject {
             this.x = oldX;
             this.y = oldY;
             this.speed = 0;
+            this.collision = true;
+        } else {
+            this.collision = false;
         }
 
     }

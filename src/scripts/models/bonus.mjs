@@ -18,6 +18,8 @@ class Bonus extends SimpleObject {
 
         super(x, y, gameField);
         this.size = Bonus.SIZE;
+        this.width = this.size;
+        this.height = this.size;
         this.color = getRandomColor();
         this.ttl = Math.random() * (constants.MAX_BONUS_TTL - constants.MIM_BONUS_TTL) + constants.MIM_BONUS_TTL; // time to live in ms
 
