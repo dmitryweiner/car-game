@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "2D Online car simulator with AI.",
   "scripts": {
-    "build": "NODE_ENV=production webpack --config webpack/webpack.config.prod.js  --colors",
+    "build": "NODE_ENV=production node --max-old-space-size=8192 node_modules/webpack/bin/webpack.js --config webpack/webpack.config.prod.js  --colors",
     "start": "node --experimental-modules ./src/scripts/truncate.mjs && node --max-old-space-size=8192 node_modules/webpack-dev-server/bin/webpack-dev-server.js --open --config webpack/webpack.config.dev.js",
     "train": "node --experimental-modules ./src/scripts/training.mjs",
     "truncate": "node --experimental-modules ./src/scripts/truncate.mjs"

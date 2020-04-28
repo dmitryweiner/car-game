@@ -76,6 +76,13 @@ export function createNeatapticObject(popSize = null) {
             elitism: constants.ELITISM,
             mutationRate: constants.MUTATION_RATE,
             mutationAmount: constants.MUTATION_AMOUNT,
+            network: new neataptic.architect.LSTM(
+                constants.SECTORS_OF_VISION * 2,
+                10,
+                10,
+                10,
+                2
+            ),
         }
     );
 }

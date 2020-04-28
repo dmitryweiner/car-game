@@ -1,5 +1,5 @@
 import Car from './car.mjs';
-import { angleToPoint, distance, sigmoidize, normalize } from '../utils.mjs';
+import { angleToPoint, distance, sigmoidize, normalize, reversedSigmoidize, fractionize } from '../utils.mjs';
 import * as constants from '../constants.mjs';
 import { isConsole } from '../utils.mjs';
 import { cloneNode } from '../neataptic-utils.mjs';
@@ -29,8 +29,10 @@ export default class AiCar extends Car {
         const nearestBonuses = getVisibleObjects(this.direction, xCenter, yCenter, bonuses);
 
         objects = objects.filter((object) => object.id !== this.id);
-        let nearestObjects = getVisibleObjects(this.direction, xCenter, yCenter, objects);
-        let activationResult = this.brain.activate([...nearestObjects, ...nearestBonuses]);
+        const nearestObjects = getVisibleObjects(this.direction, xCenter, yCenter, objects);
+
+        const input = [...nearestBonuses, ...nearestObjects];
+        let activationResult = this.brain.activate(input);
         activationResult = sigmoidize(activationResult);
 
         /**
